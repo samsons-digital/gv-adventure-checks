@@ -947,73 +947,76 @@ function renderTile(tileId, badgeId, bodyId, todayRecord) {
 // LOAD DASHBOARD
 // ═══════════════════════════════════════════════════
 async function loadDashboard() {
+  // Mark tiles as loading
+  ['fw','zl'].forEach(act => {
+    document.getElementById('tile-' + act).className = 'activity-tile status-pending';
+    document.getElementById('tile-' + act + '-badge').className = 'tile-status-badge badge-pending';
+    document.getElementById('tile-' + act + '-badge').textContent = 'LOADING';
+    document.getElementById('tile-' + act + '-body').innerHTML = '<div class="tile-pending-msg"><strong>—</strong>Loading…</div>';
+  });
+
   try {
-    const res  = await fetch(`${SCRIPT_URL}?action=getDashboard`);
+    // Single reliable call — getLog is already deployed and working
+    const res  = await fetch(SCRIPT_URL + '?action=getLog');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     const json = await res.json();
 
-    if (!json.success) throw new Error(json.message || 'Failed to load');
+    const rows  = json.data || [];
+    const today = todayKey();
 
-    const today  = todayKey();
-    const allFW  = json.fw  || [];
-    const allZL  = json.zl  || [];
+    const allFW = rows.filter(r => r.type === 'FERRIS_WHEEL');
+    const allZL = rows.filter(r => r.type === 'KIDS_ZIPLINE');
 
-    // ── TODAY'S TILES ──────────────────────────────────────────────
-    // Filter strictly to today using submittedAt timestamp
+    // ── TODAY TILES ────────────────────────────────────────────────
     const fwToday = allFW.filter(r => r.submittedAt && dateKey(r.submittedAt) === today);
     const zlToday = allZL.filter(r => r.submittedAt && dateKey(r.submittedAt) === today);
 
-    // Most recent submission today (last in array)
-    const latestFW = fwToday.length ? fwToday[fwToday.length - 1] : null;
-    const latestZL = zlToday.length ? zlToday[zlToday.length - 1] : null;
-
-    renderTile('tile-fw', 'tile-fw-badge', 'tile-fw-body', latestFW);
-    renderTile('tile-zl', 'tile-zl-badge', 'tile-zl-body', latestZL);
+    renderTile('tile-fw', 'tile-fw-badge', 'tile-fw-body',
+      fwToday.length ? fwToday[fwToday.length - 1] : null);
+    renderTile('tile-zl', 'tile-zl-badge', 'tile-zl-body',
+      zlToday.length ? zlToday[zlToday.length - 1] : null);
 
     // ── SUMMARY STATS ──────────────────────────────────────────────
-    const fwTotal     = allFW.length;
-    const zlTotal     = allZL.length;
-    const fwAnomalies = allFW.filter(r => r.anomalies && r.anomalies.trim()).length;
-    const zlAnomalies = allZL.filter(r => r.anomalies && r.anomalies.trim()).length;
-    const totalAnomalies = fwAnomalies + zlAnomalies;
+    const fwDays = new Set(allFW.map(r => r.submittedAt ? dateKey(r.submittedAt) : r.date).filter(Boolean));
+    const zlDays = new Set(allZL.map(r => r.submittedAt ? dateKey(r.submittedAt) : r.date).filter(Boolean));
 
-    // Unique days checked per activity
-    const fwDays = new Set(allFW.map(r => r.submittedAt ? dateKey(r.submittedAt) : r.date));
-    const zlDays = new Set(allZL.map(r => r.submittedAt ? dateKey(r.submittedAt) : r.date));
-
-    // Days both checked = intersection
     const daysBoth = [...fwDays].filter(d => zlDays.has(d)).length;
-    // Operational days = union
     const allDays  = new Set([...fwDays, ...zlDays]);
     const opDays   = allDays.size;
-    // Missed = days with only one activity checked
     const missed   = opDays - daysBoth;
 
-    document.getElementById('stat-fw-total').textContent   = fwTotal;
-    document.getElementById('stat-zl-total').textContent   = zlTotal;
-    document.getElementById('stat-anomalies').textContent  = totalAnomalies;
-    document.getElementById('stat-days-both').textContent  = daysBoth;
-    document.getElementById('stat-days-op').textContent    = opDays;
+    const fwAnomalies = allFW.filter(r => r.anomalies && r.anomalies.trim()).length;
+    const zlAnomalies = allZL.filter(r => r.anomalies && r.anomalies.trim()).length;
+
+    document.getElementById('stat-fw-total').textContent    = allFW.length;
+    document.getElementById('stat-zl-total').textContent    = allZL.length;
+    document.getElementById('stat-anomalies').textContent   = fwAnomalies + zlAnomalies;
+    document.getElementById('stat-days-both').textContent   = daysBoth;
+    document.getElementById('stat-days-op').textContent     = opDays;
     document.getElementById('stat-days-missed').textContent = missed;
 
     // ── 7-DAY BAR ──────────────────────────────────────────────────
-    const weekRow = document.getElementById('week-days-row');
-    const days7   = [];
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date(); d.setDate(d.getDate() - i);
-      days7.push(d);
-    }
+    const weekRow  = document.getElementById('week-days-row');
     const dayNames = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    const days7    = [];
+    for (let i = 6; i >= 0; i--) { const d = new Date(); d.setDate(d.getDate()-i); days7.push(d); }
+
     weekRow.innerHTML = days7.map(d => {
-      const k      = dateKey(d);
-      const hasFW  = fwDays.has(k);
-      const hasZL  = zlDays.has(k);
+      const k       = dateKey(d);
+      const hasFW   = fwDays.has(k);
+      const hasZL   = zlDays.has(k);
       const isToday = k === today;
       let dotClass, symbol;
-      if (isToday) { dotClass = 'week-day-dot dot-today'; symbol = '⬤'; }
-      else if (hasFW && hasZL) { dotClass = 'week-day-dot dot-both'; symbol = '✓'; }
-      else if (hasFW || hasZL) { dotClass = 'week-day-dot dot-partial'; symbol = '~'; }
-      else { dotClass = 'week-day-dot dot-none'; symbol = '—'; }
-      return `<div class="week-day"><div class="week-day-label">${dayNames[d.getDay()]}</div><div class="${dotClass}">${symbol}</div><div style="font-size:9px;color:#94a3b8;margin-top:2px">${d.getDate()}</div></div>`;
+      if (isToday && !hasFW && !hasZL) { dotClass = 'week-day-dot dot-today'; symbol = '?'; }
+      else if (hasFW && hasZL)  { dotClass = 'week-day-dot dot-both';    symbol = '✓'; }
+      else if (hasFW || hasZL)  { dotClass = 'week-day-dot dot-partial'; symbol = '~'; }
+      else                       { dotClass = 'week-day-dot dot-none';    symbol = '—'; }
+      if (isToday) dotClass += ' dot-today';
+      return '<div class="week-day">' +
+        '<div class="week-day-label">' + dayNames[d.getDay()] + '</div>' +
+        '<div class="' + dotClass + '">' + symbol + '</div>' +
+        '<div style="font-size:9px;color:#94a3b8;margin-top:2px">' + d.getDate() + '</div>' +
+        '</div>';
     }).join('');
 
     // ── BREAKDOWN TABLE ────────────────────────────────────────────
@@ -1023,70 +1026,85 @@ async function loadDashboard() {
     const lastFWAnomaly = [...allFW].reverse().find(r => r.anomalies && r.anomalies.trim());
     const lastZLAnomaly = [...allZL].reverse().find(r => r.anomalies && r.anomalies.trim());
 
-    const fwBarColor = fwRate >= 90 ? '' : fwRate >= 70 ? 'amber' : 'red';
-    const zlBarColor = zlRate >= 90 ? '' : zlRate >= 70 ? 'amber' : 'red';
+    const fwBar = fwRate >= 90 ? '' : fwRate >= 70 ? 'amber' : 'red';
+    const zlBar = zlRate >= 90 ? '' : zlRate >= 70 ? 'amber' : 'red';
 
-    document.getElementById('breakdown-body').innerHTML = `
-      <tr>
-        <td><strong>🎡 Ferris Wheel</strong></td>
-        <td style="font-size:13px">${fwTotal} checks / ${fwDays.size} days</td>
-        <td style="min-width:100px">
-          <div style="display:flex;align-items:center;gap:8px">
-            <div class="progress-wrap" style="flex:1"><div class="progress-bar ${fwBarColor}" style="width:${fwRate}%"></div></div>
-            <span style="font-size:12px;font-weight:700;color:#1a2e45;min-width:32px">${fwRate}%</span>
-          </div>
-        </td>
-        <td style="font-size:12px;color:#64748b">${lastFWAnomaly ? (lastFWAnomaly.date || '—') + ': ' + lastFWAnomaly.anomalies.substring(0,40) + '…' : 'None recorded'}</td>
-      </tr>
-      <tr>
-        <td><strong>🪂 Kids Zipline</strong></td>
-        <td style="font-size:13px">${zlTotal} checks / ${zlDays.size} days</td>
-        <td style="min-width:100px">
-          <div style="display:flex;align-items:center;gap:8px">
-            <div class="progress-wrap" style="flex:1"><div class="progress-bar ${zlBarColor}" style="width:${zlRate}%"></div></div>
-            <span style="font-size:12px;font-weight:700;color:#1a2e45;min-width:32px">${zlRate}%</span>
-          </div>
-        </td>
-        <td style="font-size:12px;color:#64748b">${lastZLAnomaly ? (lastZLAnomaly.date || '—') + ': ' + lastZLAnomaly.anomalies.substring(0,40) + '…' : 'None recorded'}</td>
-      </tr>`;
+    document.getElementById('breakdown-body').innerHTML =
+      '<tr>' +
+        '<td><strong>🎡 Ferris Wheel</strong></td>' +
+        '<td style="font-size:13px">' + allFW.length + ' checks / ' + fwDays.size + ' days</td>' +
+        '<td style="min-width:100px"><div style="display:flex;align-items:center;gap:8px">' +
+          '<div class="progress-wrap" style="flex:1"><div class="progress-bar ' + fwBar + '" style="width:' + fwRate + '%"></div></div>' +
+          '<span style="font-size:12px;font-weight:700;color:#1a2e45;min-width:32px">' + fwRate + '%</span>' +
+        '</div></td>' +
+        '<td style="font-size:12px;color:#64748b">' +
+          (lastFWAnomaly ? (lastFWAnomaly.date || '—') + ': ' + lastFWAnomaly.anomalies.substring(0,40) + '…' : 'None recorded') +
+        '</td>' +
+      '</tr>' +
+      '<tr>' +
+        '<td><strong>🪂 Kids Zipline</strong></td>' +
+        '<td style="font-size:13px">' + allZL.length + ' checks / ' + zlDays.size + ' days</td>' +
+        '<td style="min-width:100px"><div style="display:flex;align-items:center;gap:8px">' +
+          '<div class="progress-wrap" style="flex:1"><div class="progress-bar ' + zlBar + '" style="width:' + zlRate + '%"></div></div>' +
+          '<span style="font-size:12px;font-weight:700;color:#1a2e45;min-width:32px">' + zlRate + '%</span>' +
+        '</div></td>' +
+        '<td style="font-size:12px;color:#64748b">' +
+          (lastZLAnomaly ? (lastZLAnomaly.date || '—') + ': ' + lastZLAnomaly.anomalies.substring(0,40) + '…' : 'None recorded') +
+        '</td>' +
+      '</tr>';
 
     // ── RECENT SUBMISSIONS ─────────────────────────────────────────
-    const combined = [
-      ...allFW.map(r => ({...r, actType:'FERRIS_WHEEL'})),
-      ...allZL.map(r => ({...r, actType:'KIDS_ZIPLINE'})),
-    ].sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)).slice(0, 10);
+    const combined = rows
+      .slice()
+      .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt))
+      .slice(0, 10);
 
     if (!combined.length) {
-      document.getElementById('dash-recent-body').innerHTML = '<div class="empty-state">No submissions yet.</div>';
+      document.getElementById('dash-recent-body').innerHTML =
+        '<div class="empty-state">No submissions yet. Submit a daily check to see records here.</div>';
     } else {
       const tableRows = combined.map(r => {
         const hasAnomaly = r.anomalies && r.anomalies.trim().length > 0;
-        const pill = hasAnomaly ? '<span class="pill pill-action">⚠ Anomaly</span>' : '<span class="pill pill-ok">✓ Clear</span>';
-        const icon = r.actType === 'FERRIS_WHEEL' ? '🎡 Ferris Wheel' : '🪂 Kids Zipline';
-        const signer = r.actType === 'FERRIS_WHEEL' ? (r.sigSTM || r.sigOperator || '—') : (r.sigTM || r.sigSupervisor || '—');
-        const isTodayRow = r.submittedAt && dateKey(r.submittedAt) === today;
-        return `<tr style="${isTodayRow ? 'background:#f0fdf4;' : ''}">
-          <td style="font-size:11px;color:#64748b;font-family:monospace">${r.date||'—'}</td>
-          <td style="font-size:13px">${icon}</td>
-          <td>${pill}</td>
-          <td style="font-size:12px;color:#64748b">${signer}</td>
-          <td style="font-size:11px;color:#94a3b8">${r.submittedAt ? fmtTime(r.submittedAt) : '—'}</td>
-        </tr>`;
+        const pill = hasAnomaly
+          ? '<span class="pill pill-action">⚠ Anomaly</span>'
+          : '<span class="pill pill-ok">✓ Clear</span>';
+        const icon   = r.type === 'FERRIS_WHEEL' ? '🎡 Ferris Wheel' : '🪂 Kids Zipline';
+        const signer = r.type === 'FERRIS_WHEEL'
+          ? (r.sigSTM || r.sigOperator || '—')
+          : (r.sigTM  || r.sigSupervisor || '—');
+        const isRed  = r.submittedAt && dateKey(r.submittedAt) === today;
+        return '<tr style="' + (isRed ? 'background:#f0fdf4;' : '') + '">' +
+          '<td style="font-size:11px;color:#64748b;font-family:monospace">' + (r.date || '—') + '</td>' +
+          '<td style="font-size:13px">' + icon + '</td>' +
+          '<td>' + pill + '</td>' +
+          '<td style="font-size:12px;color:#64748b">' + signer + '</td>' +
+          '<td style="font-size:11px;color:#94a3b8">' + (r.submittedAt ? fmtTime(r.submittedAt) : '—') + '</td>' +
+          '</tr>';
       }).join('');
-      document.getElementById('dash-recent-body').innerHTML = `
-        <table class="log-table"><thead><tr><th>Date</th><th>Activity</th><th>Status</th><th>Signed By</th><th>Time</th></tr></thead>
-        <tbody>${tableRows}</tbody></table>`;
+
+      document.getElementById('dash-recent-body').innerHTML =
+        '<table class="log-table"><thead><tr>' +
+        '<th>Date</th><th>Activity</th><th>Status</th><th>Signed By</th><th>Time</th>' +
+        '</tr></thead><tbody>' + tableRows + '</tbody></table>';
     }
 
-    // Update refresh time
-    document.getElementById('dash-refreshed').textContent = new Date().toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'});
+    document.getElementById('dash-refreshed').textContent =
+      new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
 
   } catch (err) {
-    document.getElementById('tile-fw-body').innerHTML = `<div class="tile-pending-msg"><strong>⚠ Error</strong>${err.message}</div>`;
-    document.getElementById('tile-zl-body').innerHTML = `<div class="tile-pending-msg"><strong>⚠ Error</strong>${err.message}</div>`;
+    // Show error in tiles but keep rest of page functional
+    ['fw','zl'].forEach(act => {
+      document.getElementById('tile-' + act).className = 'activity-tile status-pending';
+      document.getElementById('tile-' + act + '-badge').textContent = 'ERROR';
+      document.getElementById('tile-' + act + '-body').innerHTML =
+        '<div class="tile-pending-msg"><strong>⚠ Could not load</strong>' + err.message + '</div>';
+    });
+    document.getElementById('breakdown-body').innerHTML =
+      '<tr><td colspan="4" style="text-align:center;color:#ef4444;padding:16px">⚠ ' + err.message + '</td></tr>';
+    document.getElementById('dash-recent-body').innerHTML =
+      '<div class="empty-state">⚠ Could not load data. Check your connection and try refreshing.</div>';
   }
 }
-
 // ═══════════════════════════════════════════════════
 // MIDNIGHT RESET — schedules a page reload at midnight
 // so the tiles clear and await fresh submissions
