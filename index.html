@@ -59,7 +59,7 @@
   .check-code { font-size: 11px; font-weight: 700; color: #2a9d5c; min-width: 52px; font-family: 'Inter', monospace; flex-shrink: 0; }
   .check-label { font-size: 13px; color: #334155; flex: 1; line-height: 1.4; }
 
-  /* YES / NO BUTTONS */
+  /* YES/NO BUTTONS */
   .yn-wrap { display: flex; border-radius: 8px; overflow: hidden; border: 1.5px solid #e2e8f0; flex-shrink: 0; }
   .yn-wrap input[type="radio"] { display: none; }
   .yn-wrap label { padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer; background: #f8fafc; color: #94a3b8; transition: all 0.18s; user-select: none; letter-spacing: 0.3px; }
@@ -71,7 +71,7 @@
   .num-input { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; color: #1a1a2e; font-family: 'Inter', sans-serif; font-size: 14px; padding: 7px 10px; width: 80px; text-align: center; flex-shrink: 0; transition: border-color 0.2s; }
   .num-input:focus { outline: none; border-color: #2a9d5c; }
 
-  /* SIGN-OFF ROWS */
+  /* SIGN-OFF */
   .signoff-row { padding: 12px 0; border-bottom: 1px solid #f0f2f5; }
   .signoff-row:last-child { border-bottom: none; }
   .signoff-label { font-size: 13px; color: #475569; font-weight: 500; margin-bottom: 8px; }
@@ -83,8 +83,8 @@
   .signoff-yn input[value="NO"]:checked  + label { background: #f1f5f9; color: #334155; }
 
   /* SUBMIT */
-  .submit-btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px; background: #2563eb; color: #ffffff; box-shadow: 0 4px 12px rgba(37,99,235,0.3); letter-spacing: 0.3px; }
-  .submit-btn:hover { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(37,99,235,0.4); }
+  .submit-btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px; background: #2563eb; color: #ffffff; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+  .submit-btn:hover { background: #1d4ed8; transform: translateY(-1px); }
   .submit-btn:active { transform: translateY(0); }
   .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
@@ -99,32 +99,227 @@
   .loading .spinner { display: inline-block; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* DASHBOARD */
-  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-  .stat-card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-left: 4px solid #2a9d5c; }
-  .stat-card-label { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
-  .stat-card-value { font-size: 32px; font-weight: 700; color: #1a2e45; line-height: 1; }
-  .stat-card-sub   { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+  /* INFO BOX */
+  .info-box { background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 10px; padding: 12px 15px; font-size: 13px; color: #1e40af; margin-bottom: 16px; line-height: 1.5; display: flex; gap: 8px; }
 
+  /* ── DASHBOARD SPECIFIC ── */
+
+  /* Today's date banner */
+  .today-banner {
+    background: #1a2e45;
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .today-banner-left { font-size: 13px; color: #94a3b8; }
+  .today-banner-left strong { color: #ffffff; display: block; font-size: 16px; margin-bottom: 2px; }
+  .today-banner-right { font-size: 11px; color: #64748b; text-align: right; }
+  .today-banner-right span { color: #f59e0b; font-size: 12px; font-weight: 600; }
+
+  /* TODAY ACTIVITY TILES */
+  .today-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+  @media (max-width: 460px) { .today-tiles { grid-template-columns: 1fr; } }
+
+  .activity-tile {
+    background: #ffffff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    border-top: 4px solid #e2e8f0;
+    transition: box-shadow 0.2s;
+  }
+  .activity-tile.status-ok      { border-top-color: #2a9d5c; }
+  .activity-tile.status-anomaly { border-top-color: #f59e0b; }
+  .activity-tile.status-pending { border-top-color: #cbd5e1; }
+
+  .tile-header {
+    padding: 14px 16px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .tile-icon-name { display: flex; align-items: center; gap: 8px; }
+  .tile-icon { font-size: 22px; }
+  .tile-name { font-size: 14px; font-weight: 700; color: #1a2e45; }
+
+  .tile-status-badge {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.8px; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 20px;
+    white-space: nowrap;
+  }
+  .badge-ok      { background: #dcfce7; color: #166534; }
+  .badge-anomaly { background: #fef3c7; color: #92400e; }
+  .badge-pending { background: #f1f5f9; color: #64748b; }
+
+  .tile-body { padding: 0 16px 16px; }
+
+  .tile-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid #f0f2f5;
+    font-size: 13px;
+  }
+  .tile-row:last-child { border-bottom: none; }
+  .tile-row-label { color: #64748b; font-size: 12px; font-weight: 500; }
+  .tile-row-value { color: #1a2e45; font-weight: 600; font-size: 13px; }
+  .tile-row-value.ok      { color: #2a9d5c; }
+  .tile-row-value.warn    { color: #d97706; }
+  .tile-row-value.pending { color: #94a3b8; }
+
+  .tile-anomaly-box {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #92400e;
+    line-height: 1.4;
+    margin-top: 10px;
+  }
+  .tile-anomaly-box strong { display: block; margin-bottom: 2px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .tile-pending-msg {
+    padding: 16px 0 8px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .tile-pending-msg strong { display: block; font-size: 14px; color: #cbd5e1; margin-bottom: 4px; }
+
+  /* SUMMARY STATS ROW */
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 460px) { .stats-row { grid-template-columns: 1fr 1fr; } }
+
+  .stat-box {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    text-align: center;
+    border-bottom: 3px solid #e2e8f0;
+  }
+  .stat-box.green { border-bottom-color: #2a9d5c; }
+  .stat-box.blue  { border-bottom-color: #3b82f6; }
+  .stat-box.amber { border-bottom-color: #f59e0b; }
+  .stat-box.red   { border-bottom-color: #ef4444; }
+
+  .stat-box-value { font-size: 28px; font-weight: 700; color: #1a2e45; line-height: 1; }
+  .stat-box-label { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 5px; }
+
+  /* 7-DAY COMPLIANCE BAR */
+  .week-card { background: #fff; border-radius: 12px; margin-bottom: 16px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .week-card-header { padding: 13px 16px; border-bottom: 1px solid #f0f2f5; display: flex; align-items: center; justify-content: space-between; }
+  .week-card-header h3 { font-size: 13px; font-weight: 700; color: #1a2e45; text-transform: uppercase; letter-spacing: 0.6px; }
+  .week-card-body { padding: 16px; }
+  .week-days { display: flex; gap: 6px; justify-content: space-between; }
+  .week-day { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .week-day-label { font-size: 10px; font-weight: 600; color: #94a3b8; text-transform: uppercase; }
+  .week-day-dot {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+  }
+  .dot-both    { background: #dcfce7; color: #166534; }
+  .dot-partial { background: #fef3c7; color: #92400e; }
+  .dot-none    { background: #f1f5f9; color: #cbd5e1; }
+  .dot-today   { background: #1a2e45; color: #ffffff; ring: 2px; outline: 2px solid #2a9d5c; }
+  .week-legend { display: flex; gap: 14px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #f0f2f5; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #64748b; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* ACTIVITY BREAKDOWN TABLE */
+  .breakdown-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .breakdown-table th { padding: 8px 12px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+  .breakdown-table td { padding: 11px 12px; border-bottom: 1px solid #f0f2f5; color: #334155; vertical-align: middle; }
+  .breakdown-table tr:last-child td { border-bottom: none; }
+
+  /* PROGRESS BAR */
+  .progress-wrap { background: #f0f2f5; border-radius: 20px; height: 8px; overflow: hidden; }
+  .progress-bar  { height: 100%; border-radius: 20px; background: #2a9d5c; transition: width 0.5s ease; }
+  .progress-bar.amber { background: #f59e0b; }
+  .progress-bar.red   { background: #ef4444; }
+
+  /* RECENT LOG */
   .log-card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
-  .log-card-header { padding: 14px 18px; border-bottom: 1px solid #f0f2f5; display: flex; align-items: center; justify-content: space-between; }
-  .log-card-header h3 { font-size: 14px; font-weight: 700; color: #1a2e45; text-transform: uppercase; letter-spacing: 0.6px; }
+  .log-card-header { padding: 13px 16px; border-bottom: 1px solid #f0f2f5; display: flex; align-items: center; justify-content: space-between; }
+  .log-card-header h3 { font-size: 13px; font-weight: 700; color: #1a2e45; text-transform: uppercase; letter-spacing: 0.6px; }
   .refresh-btn { background: #f8fafc; border: 1.5px solid #e2e8f0; color: #64748b; padding: 5px 12px; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; }
   .refresh-btn:hover { background: #e2e8f0; }
 
   .log-table { width: 100%; border-collapse: collapse; font-size: 13px; }
   .log-table th { padding: 9px 14px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: #64748b; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
-  .log-table td { padding: 11px 14px; border-bottom: 1px solid #f0f2f5; color: #334155; vertical-align: middle; }
+  .log-table td { padding: 10px 14px; border-bottom: 1px solid #f0f2f5; color: #334155; vertical-align: middle; }
   .log-table tr:last-child td { border-bottom: none; }
   .log-table tr:hover td { background: #f8fafc; }
 
-  .pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
   .pill-ok      { background: #f0fdf4; color: #166534; border: 1px solid #86efac; }
-  .pill-action  { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
+  .pill-action  { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
   .pill-pending { background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0; }
 
   .empty-state { padding: 36px; text-align: center; color: #94a3b8; font-size: 14px; }
-  .info-box { background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 10px; padding: 12px 15px; font-size: 13px; color: #1e40af; margin-bottom: 16px; line-height: 1.5; display: flex; gap: 8px; }
+
+  /* MIDNIGHT NOTICE */
+  .midnight-note { font-size: 11px; color: #94a3b8; text-align: center; padding: 10px; }
+  .midnight-note strong { color: #64748b; }
+
+  /* ── MAINTENANCE TAB ── */
+  .maint-lock { background:#fff;border-radius:14px;box-shadow:0 1px 4px rgba(0,0,0,0.08);padding:40px 24px;text-align:center;margin-bottom:16px; }
+  .maint-lock-icon { font-size:40px;margin-bottom:14px; }
+  .maint-lock h2 { font-size:16px;font-weight:700;color:#1a2e45;margin-bottom:6px; }
+  .maint-lock p  { font-size:13px;color:#64748b;margin-bottom:20px; }
+  .pin-row { display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap; }
+  .pin-input { width:130px;padding:11px 14px;font-size:18px;letter-spacing:6px;text-align:center;border:1.5px solid #e2e8f0;border-radius:10px;font-family:'Inter',monospace;background:#f8fafc;color:#1a2e45;transition:border-color 0.2s; }
+  .pin-input:focus { outline:none;border-color:#2a9d5c;background:#fff; }
+  .pin-btn { padding:11px 22px;background:#1a2e45;color:#fff;border:none;border-radius:10px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s; }
+  .pin-btn:hover { background:#2a9d5c; }
+  .pin-error { font-size:12px;color:#ef4444;margin-top:8px;display:none; }
+  .maint-panel { display:none; }
+  .maint-panel.unlocked { display:block; }
+  .maint-header-bar { background:#1a2e45;border-radius:12px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px; }
+  .maint-header-bar h2 { font-size:15px;font-weight:700;color:#fff; }
+  .maint-header-bar span { font-size:12px;color:#94a3b8; }
+  .lock-btn { background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:#94a3b8;padding:5px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif; }
+  .lock-btn:hover { background:rgba(255,255,255,0.18);color:#fff; }
+  .maint-activity-tabs { display:flex;gap:0;margin-bottom:16px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.08); }
+  .maint-act-btn { flex:1;background:none;border:none;padding:12px 8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#64748b;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;text-align:center; }
+  .maint-act-btn.active { color:#1a2e45;border-bottom-color:#2a9d5c;background:#f0fdf4; }
+  .maint-task-row { display:flex;align-items:flex-start;gap:12px;padding:13px 18px;border-bottom:1px solid #f0f2f5;transition:background 0.15s; }
+  .maint-task-row:last-child { border-bottom:none; }
+  .maint-task-row:hover { background:#f8fafc; }
+  .maint-freq-badge { font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0;margin-top:2px; }
+  .freq-daily { background:#dbeafe;color:#1e40af; }
+  .freq-weekly { background:#dcfce7;color:#166534; }
+  .freq-monthly { background:#fef3c7;color:#92400e; }
+  .freq-annual { background:#fce7f3;color:#9d174d; }
+  .maint-task-info { flex:1; }
+  .maint-task-title { font-size:13px;font-weight:600;color:#1a2e45;margin-bottom:3px; }
+  .maint-task-desc  { font-size:12px;color:#64748b;line-height:1.4; }
+  .maint-task-controls { display:flex;flex-direction:column;gap:6px;align-items:flex-end;flex-shrink:0;min-width:140px; }
+  .maint-date-label { font-size:10px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px; }
+  .maint-date-input { font-size:12px;padding:5px 9px;border:1.5px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#1a2e45;font-family:'Inter',sans-serif;width:138px;transition:border-color 0.2s; }
+  .maint-date-input:focus { outline:none;border-color:#2a9d5c;background:#fff; }
+  .maint-status-dot { width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px; }
+  .dot-green { background:#2a9d5c; } .dot-amber { background:#f59e0b; } .dot-red { background:#ef4444; } .dot-grey { background:#cbd5e1; }
+  .maint-overdue-tag { font-size:10px;font-weight:700;color:#ef4444;text-transform:uppercase;letter-spacing:0.5px; }
+  .maint-due-tag { font-size:10px;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:0.5px; }
+  .maint-save-bar { position:sticky;bottom:0;background:#fff;border-top:1px solid #e2e8f0;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:0 0 12px 12px;box-shadow:0 -2px 8px rgba(0,0,0,0.06); }
+  .maint-save-btn { padding:10px 24px;background:#2a9d5c;color:#fff;border:none;border-radius:9px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s; }
+  .maint-save-btn:hover { background:#238a50; }
+  .maint-save-btn:disabled { opacity:0.5;cursor:not-allowed; }
+  .maint-save-status { font-size:13px;color:#64748b; }
+  .maint-save-status.saved { color:#2a9d5c;font-weight:600; }
+  .maint-save-status.error { color:#ef4444;font-weight:600; }
 </style>
 </head>
 <body>
@@ -142,16 +337,121 @@
 </header>
 
 <nav class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('fw')">🎡 Ferris Wheel</button>
+  <button class="tab-btn active" onclick="switchTab('dash')">📊 Dashboard</button>
+  <button class="tab-btn"        onclick="switchTab('fw')">🎡 Ferris Wheel</button>
   <button class="tab-btn"        onclick="switchTab('zl')">🪂 Kids Zipline</button>
-  <button class="tab-btn"        onclick="switchTab('log')">📋 Submission Log</button>
+  <button class="tab-btn"        onclick="switchTab('log')">📋 All Records</button>
+  <button class="tab-btn"        onclick="switchTab('maint')">🔧 Maintenance</button>
 </nav>
 
 <main class="main">
 
-<!-- ═══════════════ FERRIS WHEEL ═══════════════ -->
-<div id="tab-fw" class="tab-panel active">
-  <div class="info-box"><span>ℹ️</span> Complete all checks before the Ferris Wheel opens to guests. Select YES for pass, NO for any failure. Any NO must be explained in the Anomalies section below.</div>
+<!-- ═══════════════════════════════
+     DASHBOARD TAB
+═══════════════════════════════ -->
+<div id="tab-dash" class="tab-panel active">
+
+  <!-- Today banner -->
+  <div class="today-banner">
+    <div class="today-banner-left">
+      <strong id="dash-today-label">Today</strong>
+      Tiles reset automatically at midnight
+    </div>
+    <div class="today-banner-right">
+      Last refreshed: <span id="dash-refreshed">—</span><br>
+      <button onclick="loadDashboard()" style="margin-top:4px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:#94a3b8;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-family:Inter,sans-serif;">↺ Refresh</button>
+    </div>
+  </div>
+
+  <!-- Today's activity tiles -->
+  <div class="today-tiles">
+    <div class="activity-tile status-pending" id="tile-fw">
+      <div class="tile-header">
+        <div class="tile-icon-name">
+          <span class="tile-icon">🎡</span>
+          <span class="tile-name">Ferris Wheel</span>
+        </div>
+        <span class="tile-status-badge badge-pending" id="tile-fw-badge">LOADING</span>
+      </div>
+      <div class="tile-body" id="tile-fw-body">
+        <div class="tile-pending-msg"><strong>—</strong>Loading…</div>
+      </div>
+    </div>
+    <div class="activity-tile status-pending" id="tile-zl">
+      <div class="tile-header">
+        <div class="tile-icon-name">
+          <span class="tile-icon">🪂</span>
+          <span class="tile-name">Kids Zipline</span>
+        </div>
+        <span class="tile-status-badge badge-pending" id="tile-zl-badge">LOADING</span>
+      </div>
+      <div class="tile-body" id="tile-zl-body">
+        <div class="tile-pending-msg"><strong>—</strong>Loading…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary stats -->
+  <div class="stats-row" id="dash-stats-row">
+    <div class="stat-box green"><div class="stat-box-value" id="stat-fw-total">—</div><div class="stat-box-label">FW Checks Total</div></div>
+    <div class="stat-box green"><div class="stat-box-value" id="stat-zl-total">—</div><div class="stat-box-label">ZL Checks Total</div></div>
+    <div class="stat-box amber"><div class="stat-box-value" id="stat-anomalies">—</div><div class="stat-box-label">Anomalies Logged</div></div>
+    <div class="stat-box blue"><div class="stat-box-value" id="stat-days-both">—</div><div class="stat-box-label">Days Both Checked</div></div>
+    <div class="stat-box blue"><div class="stat-box-value" id="stat-days-op">—</div><div class="stat-box-label">Operational Days</div></div>
+    <div class="stat-box red"><div class="stat-box-value" id="stat-days-missed">—</div><div class="stat-box-label">Days Missed</div></div>
+  </div>
+
+  <!-- 7-day compliance bar -->
+  <div class="week-card">
+    <div class="week-card-header">
+      <h3>Last 7 Days — Check Compliance</h3>
+    </div>
+    <div class="week-card-body">
+      <div class="week-days" id="week-days-row"></div>
+      <div class="week-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#dcfce7;border:1px solid #86efac"></div> Both checked</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#fef3c7;border:1px solid #fde68a"></div> Partial</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f1f5f9;border:1px solid #e2e8f0"></div> Not checked</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity breakdown -->
+  <div class="card">
+    <div class="section-header"><span class="section-tag">Summary</span><h2>Activity Compliance Breakdown</h2></div>
+    <div class="card-body">
+      <table class="breakdown-table">
+        <thead><tr>
+          <th>Activity</th>
+          <th>Checks Done</th>
+          <th>Compliance</th>
+          <th>Last Anomaly</th>
+        </tr></thead>
+        <tbody id="breakdown-body">
+          <tr><td colspan="4" style="text-align:center;color:#94a3b8;padding:20px">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Recent submissions -->
+  <div class="log-card">
+    <div class="log-card-header">
+      <h3>Recent Submissions</h3>
+      <button class="refresh-btn" onclick="loadDashboard()">↺ Refresh</button>
+    </div>
+    <div id="dash-recent-body"><div class="empty-state">Loading…</div></div>
+  </div>
+
+  <div class="midnight-note">Tiles and today's status reset daily at <strong>midnight</strong>. Summary stats reflect all-time records.</div>
+
+</div>
+
+<!-- ═══════════════════════════════
+     FERRIS WHEEL TAB
+═══════════════════════════════ -->
+<div id="tab-fw" class="tab-panel">
+  <div class="info-box"><span>ℹ️</span> Complete all checks before the Ferris Wheel opens to guests. Select YES for pass, NO for any failure. Any NO must be explained in the Anomalies section.</div>
   <form id="fw-form">
 
     <div class="card">
@@ -172,27 +472,16 @@
     </div>
 
     <div class="card">
-      <div class="section-header"><span class="section-tag">FW1.0 – FW1.4</span><h2>Weather Conditions</h2></div>
+      <div class="section-header"><span class="section-tag">FW1.0–FW1.4</span><h2>Weather Conditions</h2></div>
       <div class="card-body">
         <div class="grid-2">
-          <div class="field">
-            <label>Weather Code (FW1.0)</label>
-            <select id="fw-weather">
-              <option value="">— Select —</option>
-              <option>1 – Cloudless</option><option>2 – Partly Cloudy</option>
-              <option>3 – Cloudy</option><option>4 – Fog</option>
-              <option>5 – Snow</option><option>6 – Rain</option><option>7 – Wind</option>
-            </select>
+          <div class="field"><label>Weather Code (FW1.0)</label>
+            <select id="fw-weather"><option value="">— Select —</option><option>1 – Cloudless</option><option>2 – Partly Cloudy</option><option>3 – Cloudy</option><option>4 – Fog</option><option>5 – Snow</option><option>6 – Rain</option><option>7 – Wind</option></select>
           </div>
           <div class="field"><label>Temperature °C (FW1.1)</label><input type="number" step="0.1" id="fw-temp" placeholder="e.g. 18"></div>
           <div class="field"><label>Wind Speed m/s (FW1.2)</label><input type="number" step="0.1" id="fw-windSpeed" placeholder="e.g. 3.5"></div>
-          <div class="field">
-            <label>Wind Direction (FW1.3)</label>
-            <select id="fw-windDir">
-              <option value="">— Select —</option>
-              <option>A – Axis</option><option>T – Transversal</option>
-              <option>D – Diagonal</option><option>V – Variable</option>
-            </select>
+          <div class="field"><label>Wind Direction (FW1.3)</label>
+            <select id="fw-windDir"><option value="">— Select —</option><option>A – Axis</option><option>T – Transversal</option><option>D – Diagonal</option><option>V – Variable</option></select>
           </div>
         </div>
         <div class="field" style="margin-top:12px"><label>Daily Rain mm/hr (FW1.4)</label><input type="number" step="0.1" id="fw-rain" placeholder="0 if none"></div>
@@ -200,7 +489,7 @@
     </div>
 
     <div class="card">
-      <div class="section-header"><span class="section-tag">FW5 – FW18</span><h2>Daily Checks &amp; Testing</h2></div>
+      <div class="section-header"><span class="section-tag">FW5–FW18</span><h2>Daily Checks &amp; Testing</h2></div>
       <div class="card-body" id="fw-checks-body"></div>
     </div>
 
@@ -222,14 +511,15 @@
     </div>
 
     <button type="submit" class="submit-btn" id="fw-btn">
-      <span class="spinner" id="fw-spinner"></span>
-      🎡 Submit Ferris Wheel Daily Check
+      <span class="spinner" id="fw-spinner"></span>🎡 Submit Ferris Wheel Daily Check
     </button>
     <div class="status-msg" id="fw-status"></div>
   </form>
 </div>
 
-<!-- ═══════════════ KIDS ZIPLINE ═══════════════ -->
+<!-- ═══════════════════════════════
+     KIDS ZIPLINE TAB
+═══════════════════════════════ -->
 <div id="tab-zl" class="tab-panel">
   <div class="info-box"><span>ℹ️</span> Complete all checks before the Kids Zipline opens to guests. Enter equipment counts and select YES for pass, NO for any failure.</div>
   <form id="zl-form">
@@ -250,44 +540,33 @@
     </div>
 
     <div class="card">
-      <div class="section-header"><span class="section-tag">ZL1 – ZL4</span><h2>Weather Conditions — Top Station</h2></div>
+      <div class="section-header"><span class="section-tag">ZL1–ZL4</span><h2>Weather Conditions — Top Station</h2></div>
       <div class="card-body">
         <div class="grid-2">
-          <div class="field">
-            <label>Weather Code (ZL1)</label>
-            <select id="zl-weather">
-              <option value="">— Select —</option>
-              <option>1 – Cloudless</option><option>2 – Partly Cloudy</option>
-              <option>3 – Cloudy</option><option>4 – Fog</option>
-              <option>5 – Snow</option><option>6 – Rain</option><option>7 – Wind</option>
-            </select>
+          <div class="field"><label>Weather Code (ZL1)</label>
+            <select id="zl-weather"><option value="">— Select —</option><option>1 – Cloudless</option><option>2 – Partly Cloudy</option><option>3 – Cloudy</option><option>4 – Fog</option><option>5 – Snow</option><option>6 – Rain</option><option>7 – Wind</option></select>
           </div>
           <div class="field"><label>Temperature °C (ZL2)</label><input type="number" step="0.1" id="zl-temp" placeholder="e.g. 15"></div>
           <div class="field"><label>Wind Speed m/s (ZL3)</label><input type="number" step="0.1" id="zl-windSpeed" placeholder="e.g. 2.0"></div>
-          <div class="field">
-            <label>Wind Direction (ZL4)</label>
-            <select id="zl-windDir">
-              <option value="">— Select —</option>
-              <option>A – Axis</option><option>T – Transversal</option>
-              <option>D – Diagonal</option><option>V – Variable</option>
-            </select>
+          <div class="field"><label>Wind Direction (ZL4)</label>
+            <select id="zl-windDir"><option value="">— Select —</option><option>A – Axis</option><option>T – Transversal</option><option>D – Diagonal</option><option>V – Variable</option></select>
           </div>
         </div>
       </div>
     </div>
 
     <div class="card">
-      <div class="section-header"><span class="section-tag">ZL7 – ZL10</span><h2>Equipment Counts</h2></div>
+      <div class="section-header"><span class="section-tag">ZL7–ZL10</span><h2>Equipment Counts</h2></div>
       <div class="card-body" id="zl-eqp-body"></div>
     </div>
 
     <div class="card">
-      <div class="section-header"><span class="section-tag">ZL11 – ZL23</span><h2>Daily Safety Checks</h2></div>
+      <div class="section-header"><span class="section-tag">ZL11–ZL23</span><h2>Daily Safety Checks</h2></div>
       <div class="card-body" id="zl-checks-body"></div>
     </div>
 
     <div class="card">
-      <div class="section-header"><span class="section-tag">ZL24 – ZL25</span><h2>Rescue Training Records</h2></div>
+      <div class="section-header"><span class="section-tag">ZL24–ZL25</span><h2>Rescue Training Records</h2></div>
       <div class="card-body">
         <div class="grid-2">
           <div class="field"><label>Last Rescue Training</label><input type="date" id="zl-lastRescue"></div>
@@ -314,35 +593,139 @@
     </div>
 
     <button type="submit" class="submit-btn" id="zl-btn">
-      <span class="spinner" id="zl-spinner"></span>
-      🪂 Submit Zipline Daily Check
+      <span class="spinner" id="zl-spinner"></span>🪂 Submit Zipline Daily Check
     </button>
     <div class="status-msg" id="zl-status"></div>
   </form>
 </div>
 
-<!-- ═══════════════ SUBMISSION LOG ═══════════════ -->
+<!-- ═══════════════════════════════
+     ALL RECORDS TAB
+═══════════════════════════════ -->
 <div id="tab-log" class="tab-panel">
-  <div class="stat-grid">
-    <div class="stat-card"><div class="stat-card-label">🎡 Ferris Wheel</div><div class="stat-card-value" id="stat-fw">—</div><div class="stat-card-sub">Total submissions</div></div>
-    <div class="stat-card"><div class="stat-card-label">🪂 Kids Zipline</div><div class="stat-card-value" id="stat-zl">—</div><div class="stat-card-sub">Total submissions</div></div>
-  </div>
   <div class="log-card">
     <div class="log-card-header">
-      <h3>Recent Submissions</h3>
+      <h3>All Submissions</h3>
       <button class="refresh-btn" onclick="loadLog()">↺ Refresh</button>
     </div>
     <div id="log-body"><div class="empty-state">Loading submissions…</div></div>
   </div>
 </div>
 
+<!-- ═══════════════════════════════
+     MAINTENANCE TAB
+═══════════════════════════════ -->
+<div id="tab-maint" class="tab-panel">
+
+  <!-- LOCK SCREEN -->
+  <div class="maint-lock" id="maint-lock-screen">
+    <div class="maint-lock-icon">🔒</div>
+    <h2>SNR Tech Manager Access</h2>
+    <p>Enter your PIN to access the Maintenance Schedule.</p>
+    <div class="pin-row">
+      <input type="password" class="pin-input" id="maint-pin" maxlength="4" placeholder="••••" inputmode="numeric">
+      <button class="pin-btn" onclick="checkPin()">Unlock</button>
+    </div>
+    <div class="pin-error" id="pin-error">Incorrect PIN. Please try again.</div>
+  </div>
+
+  <!-- MAINTENANCE PANEL (shown after PIN) -->
+  <div class="maint-panel" id="maint-panel">
+
+    <div class="maint-header-bar">
+      <div>
+        <h2>🔧 Maintenance Schedule Manager</h2>
+        <span>Green Valley Adventure Park — Ferris Wheel &amp; Kids Zipline</span>
+      </div>
+      <button class="lock-btn" onclick="lockMaint()">🔒 Lock</button>
+    </div>
+
+    <!-- Activity sub-tabs -->
+    <div class="maint-activity-tabs">
+      <button class="maint-act-btn active" onclick="switchMaintAct('fw')">🎡 Ferris Wheel</button>
+      <button class="maint-act-btn"        onclick="switchMaintAct('zl')">🪂 Kids Zipline</button>
+    </div>
+
+    <!-- FW Maintenance -->
+    <div id="maint-fw" class="maint-section">
+      <div class="card">
+        <div class="section-header"><span class="section-tag">Daily</span><h2>Daily Pre-Operation Checks</h2></div>
+        <div id="maint-fw-daily"></div>
+        <div class="maint-save-bar">
+          <span class="maint-save-status" id="fw-save-daily-status"></span>
+          <button class="maint-save-btn" onclick="saveMaint('fw','daily')">Save Daily</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-header"><span class="section-tag">Weekly</span><h2>Weekly Maintenance Tasks</h2></div>
+        <div id="maint-fw-weekly"></div>
+        <div class="maint-save-bar">
+          <span class="maint-save-status" id="fw-save-weekly-status"></span>
+          <button class="maint-save-btn" onclick="saveMaint('fw','weekly')">Save Weekly</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-header"><span class="section-tag">Monthly</span><h2>Monthly Maintenance Tasks</h2></div>
+        <div id="maint-fw-monthly"></div>
+        <div class="maint-save-bar">
+          <span class="maint-save-status" id="fw-save-monthly-status"></span>
+          <button class="maint-save-btn" onclick="saveMaint('fw','monthly')">Save Monthly</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-header"><span class="section-tag">Annual</span><h2>Annual Inspections &amp; Overhauls</h2></div>
+        <div id="maint-fw-annual"></div>
+        <div class="maint-save-bar">
+          <span class="maint-save-status" id="fw-save-annual-status"></span>
+          <button class="maint-save-btn" onclick="saveMaint('fw','annual')">Save Annual</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ZL Maintenance -->
+    <div id="maint-zl" class="maint-section" style="display:none">
+      <div class="card">
+        <div class="section-header"><span class="section-tag">Daily</span><h2>Daily Pre-Operation Checks</h2></div>
+        <div id="maint-zl-daily"></div>
+        <div class="maint-save-bar">
+          <span class="maint-save-status" id="zl-save-daily-status"></span>
+          <button class="maint-save-btn" onclick="saveMaint('zl','daily')">Save Daily</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-header"><span class="section-tag">Weekly</span><h2>Weekly Maintenance Tasks</h2></div>
+        <div id="maint-zl-weekly"></div>
+        <div class="maint-save-bar">
+          <span class="maint-save-status" id="zl-save-weekly-status"></span>
+          <button class="maint-save-btn" onclick="saveMaint('zl','weekly')">Save Weekly</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-header"><span class="section-tag">Monthly</span><h2>Monthly Maintenance Tasks</h2></div>
+        <div id="maint-zl-monthly"></div>
+        <div class="maint-save-bar">
+          <span class="maint-save-status" id="zl-save-monthly-status"></span>
+          <button class="maint-save-btn" onclick="saveMaint('zl','monthly')">Save Monthly</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-header"><span class="section-tag">Annual</span><h2>Annual Inspections &amp; Overhauls</h2></div>
+        <div id="maint-zl-annual"></div>
+        <div class="maint-save-bar">
+          <span class="maint-save-status" id="zl-save-annual-status"></span>
+          <button class="maint-save-btn" onclick="saveMaint('zl','annual')">Save Annual</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
 </main>
 
 <script>
-// ═══════════════════════════════════════════════════
-// SCRIPT URL
-// ═══════════════════════════════════════════════════
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzoygc-fuNqIoO1F3AYSrNKici6H57yn_JeLK5sZKIn3Kkqoe_7M-Ja6SCm3fV3ODJaOg/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4Ht7RPxnpwdOZbEu2StIE2rxp7dnrsXHWe15h_Orfz8DHz9QbiqgMbt_7hpWpLFgk/exec';
 
 // ═══════════════════════════════════════════════════
 // CHECK DATA
@@ -381,7 +764,7 @@ const ZL_CHECKS = [
   { code:'ZL11', label:'Two-way radios — Check and battery charge' },
   { code:'ZL12', label:'Zipline wires, terminations and backup — at Landing' },
   { code:'ZL13', label:'Zipline wires, terminations and backup — at Start' },
-  { code:'ZL14', label:'No extraordinary occurrences since last use (earth slide, avalanche, other)' },
+  { code:'ZL14', label:'No extraordinary occurrences since last use' },
   { code:'ZL15', label:'Access ways and platforms — Safe and not slippery' },
   { code:'ZL16', label:'Zip Stop function — Checked per operating manual' },
   { code:'ZL17', label:'Black Dyneema rope of Zip Stop — No white inlay parts visible' },
@@ -407,8 +790,8 @@ const ZL_SIGNOFFS = [
 // ═══════════════════════════════════════════════════
 // BUILDERS
 // ═══════════════════════════════════════════════════
-function buildCheckRows(containerId, items) {
-  document.getElementById(containerId).innerHTML = items.map(item => `
+function buildCheckRows(id, items) {
+  document.getElementById(id).innerHTML = items.map(item => `
     <div class="check-row">
       <span class="check-code">${item.code}</span>
       <span class="check-label">${item.label}</span>
@@ -421,8 +804,8 @@ function buildCheckRows(containerId, items) {
     </div>`).join('');
 }
 
-function buildEqpRows(containerId, items) {
-  document.getElementById(containerId).innerHTML = items.map(item => `
+function buildEqpRows(id, items) {
+  document.getElementById(id).innerHTML = items.map(item => `
     <div class="check-row">
       <span class="check-code">${item.code}</span>
       <span class="check-label">${item.label}</span>
@@ -430,21 +813,20 @@ function buildEqpRows(containerId, items) {
     </div>`).join('');
 }
 
-function buildOI(containerId, prefix, count) {
+function buildOI(id, prefix, count) {
   let html = '';
   for (let i = 1; i <= count; i++) {
-    html += `
-      <div class="divider"><span>Interruption ${i}</span></div>
-      <div class="grid-2">
-        <div class="field"><label>Time</label><input type="time" id="${prefix}-oi${i}-time"></div>
-        <div class="field"><label>Department / Reason</label><input type="text" id="${prefix}-oi${i}-dept" placeholder="e.g. Mechanical, Weather"></div>
-      </div>`;
+    html += `<div class="divider"><span>Interruption ${i}</span></div>
+    <div class="grid-2">
+      <div class="field"><label>Time</label><input type="time" id="${prefix}-oi${i}-time"></div>
+      <div class="field"><label>Department / Reason</label><input type="text" id="${prefix}-oi${i}-dept" placeholder="e.g. Mechanical, Weather"></div>
+    </div>`;
   }
-  document.getElementById(containerId).innerHTML = html;
+  document.getElementById(id).innerHTML = html;
 }
 
-function buildSignoffs(containerId, items) {
-  document.getElementById(containerId).innerHTML = items.map(item => `
+function buildSignoffs(id, items) {
+  document.getElementById(id).innerHTML = items.map(item => `
     <div class="signoff-row">
       <div class="signoff-label">${item.label}</div>
       <div class="signoff-yn">
@@ -464,113 +846,264 @@ function getVal(id)   { const el = document.getElementById(id); return el ? (el.
 function getNum(id)   { const el = document.getElementById(id); return el ? Number(el.value || 0) : 0; }
 
 function collectFW() {
-  const checks = {};
+  const checks = {}, interruptions = [];
   FW_CHECKS.forEach(c => { checks[c.code] = getYN('chk-' + c.code); });
-  const interruptions = [];
-  for (let i = 1; i <= 3; i++) {
-    const t = getVal(`fw-oi${i}-time`), d = getVal(`fw-oi${i}-dept`);
-    if (t || d) interruptions.push({ num: i, time: t, dept: d });
-  }
-  return {
-    action      : 'submitFerrisWheel',
-    type        : 'FERRIS_WHEEL',
-    date        : getVal('fw-date'),
-    operatorName: getVal('fw-operatorName'),
-    opStart     : getVal('fw-opStart'),
-    guestStart  : getVal('fw-guestStart'),
-    opEnd       : getVal('fw-opEnd'),
-    avgSpeed    : getVal('fw-avgSpeed'),
-    voltage     : getVal('fw-voltage'),
-    weather     : getVal('fw-weather'),
-    temp        : getVal('fw-temp'),
-    windSpeed   : getVal('fw-windSpeed'),
-    windDir     : getVal('fw-windDir'),
-    rain        : getVal('fw-rain'),
-    checks, interruptions,
-    sigOperator : getYN('fw-sigOperator'),
-    sigEngineer : getYN('fw-sigEngineer'),
-    sigSTM      : getYN('fw-sigSTM'),
-    comments    : getVal('fw-comments'),
-    submittedAt : new Date().toISOString(),
-  };
+  for (let i = 1; i <= 3; i++) { const t = getVal(`fw-oi${i}-time`), d = getVal(`fw-oi${i}-dept`); if (t||d) interruptions.push({num:i,time:t,dept:d}); }
+  return { action:'submitFerrisWheel', type:'FERRIS_WHEEL', date:getVal('fw-date'), operatorName:getVal('fw-operatorName'), opStart:getVal('fw-opStart'), guestStart:getVal('fw-guestStart'), opEnd:getVal('fw-opEnd'), avgSpeed:getVal('fw-avgSpeed'), voltage:getVal('fw-voltage'), weather:getVal('fw-weather'), temp:getVal('fw-temp'), windSpeed:getVal('fw-windSpeed'), windDir:getVal('fw-windDir'), rain:getVal('fw-rain'), checks, interruptions, sigOperator:getYN('fw-sigOperator'), sigEngineer:getYN('fw-sigEngineer'), sigSTM:getYN('fw-sigSTM'), comments:getVal('fw-comments'), submittedAt:new Date().toISOString() };
 }
 
 function collectZL() {
-  const checks = {}, equipment = {};
+  const checks = {}, equipment = {}, interruptions = [];
   ZL_CHECKS.forEach(c => { checks[c.code] = getYN('chk-' + c.code); });
   ZL_EQUIPMENT.forEach(c => { equipment[c.code] = getNum('eqp-' + c.code.replace(/\./g,'_')); });
-  const interruptions = [];
-  for (let i = 1; i <= 3; i++) {
-    const t = getVal(`zl-oi${i}-time`), d = getVal(`zl-oi${i}-dept`);
-    if (t || d) interruptions.push({ num: i, time: t, dept: d });
-  }
-  return {
-    action       : 'submitZipline',
-    type         : 'KIDS_ZIPLINE',
-    date         : getVal('zl-date'),
-    operatorName : getVal('zl-operatorName'),
-    opStart      : getVal('zl-opStart'),
-    opEnd        : getVal('zl-opEnd'),
-    customers    : getVal('zl-customers'),
-    weather      : getVal('zl-weather'),
-    temp         : getVal('zl-temp'),
-    windSpeed    : getVal('zl-windSpeed'),
-    windDir      : getVal('zl-windDir'),
-    lastRescue   : getVal('zl-lastRescue'),
-    nextRescue   : getVal('zl-nextRescue'),
-    equipment, checks, interruptions,
-    sigSupervisor: getYN('zl-sigSupervisor'),
-    sigTM        : getYN('zl-sigTM'),
-    comments     : getVal('zl-comments'),
-    submittedAt  : new Date().toISOString(),
-  };
+  for (let i = 1; i <= 3; i++) { const t = getVal(`zl-oi${i}-time`), d = getVal(`zl-oi${i}-dept`); if (t||d) interruptions.push({num:i,time:t,dept:d}); }
+  return { action:'submitZipline', type:'KIDS_ZIPLINE', date:getVal('zl-date'), operatorName:getVal('zl-operatorName'), opStart:getVal('zl-opStart'), opEnd:getVal('zl-opEnd'), customers:getVal('zl-customers'), weather:getVal('zl-weather'), temp:getVal('zl-temp'), windSpeed:getVal('zl-windSpeed'), windDir:getVal('zl-windDir'), lastRescue:getVal('zl-lastRescue'), nextRescue:getVal('zl-nextRescue'), equipment, checks, interruptions, sigSupervisor:getYN('zl-sigSupervisor'), sigTM:getYN('zl-sigTM'), comments:getVal('zl-comments'), submittedAt:new Date().toISOString() };
 }
 
 // ═══════════════════════════════════════════════════
-// SUBMIT — JSON POST matching MJSR pattern
+// SUBMIT
 // ═══════════════════════════════════════════════════
 async function submitForm(data, btnId, spinnerId, statusId) {
-  const btn = document.getElementById(btnId);
-  const spinner = document.getElementById(spinnerId);
-  const statusEl = document.getElementById(statusId);
-  btn.disabled = true; btn.classList.add('loading');
-  spinner.style.display = 'inline-block';
-  statusEl.className = 'status-msg';
+  const btn = document.getElementById(btnId), spinner = document.getElementById(spinnerId), statusEl = document.getElementById(statusId);
+  btn.disabled = true; btn.classList.add('loading'); spinner.style.display = 'inline-block'; statusEl.className = 'status-msg';
   try {
-    const res = await fetch(SCRIPT_URL, {
-      method : 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body   : JSON.stringify(data),
-    });
+    const res  = await fetch(SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body:JSON.stringify(data) });
     const json = await res.json();
     if (json.status === 'success' || json.success) {
       statusEl.className = 'status-msg success show';
       statusEl.innerHTML = '✅ Daily check submitted successfully. Record saved to Google Sheets.';
-    } else {
-      throw new Error(json.message || json.error || 'Unknown error');
-    }
+      // Refresh dashboard tiles after successful submission
+      setTimeout(() => loadDashboard(), 1500);
+    } else { throw new Error(json.message || json.error || 'Unknown error'); }
   } catch (err) {
     statusEl.className = 'status-msg error show';
     statusEl.innerHTML = `❌ Network error. Check connection and try again. (${err.message})`;
   } finally {
-    btn.disabled = false; btn.classList.remove('loading');
-    spinner.style.display = 'none';
+    btn.disabled = false; btn.classList.remove('loading'); spinner.style.display = 'none';
   }
 }
 
-document.getElementById('fw-form').addEventListener('submit', e => {
-  e.preventDefault();
-  if (!getVal('fw-date')) { alert('Please select a check date.'); return; }
-  submitForm(collectFW(), 'fw-btn', 'fw-spinner', 'fw-status');
-});
-document.getElementById('zl-form').addEventListener('submit', e => {
-  e.preventDefault();
-  if (!getVal('zl-date')) { alert('Please select a check date.'); return; }
-  submitForm(collectZL(), 'zl-btn', 'zl-spinner', 'zl-status');
-});
+document.getElementById('fw-form').addEventListener('submit', e => { e.preventDefault(); if (!getVal('fw-date')) { alert('Please select a check date.'); return; } submitForm(collectFW(), 'fw-btn', 'fw-spinner', 'fw-status'); });
+document.getElementById('zl-form').addEventListener('submit', e => { e.preventDefault(); if (!getVal('zl-date')) { alert('Please select a check date.'); return; } submitForm(collectZL(), 'zl-btn', 'zl-spinner', 'zl-status'); });
 
 // ═══════════════════════════════════════════════════
-// SUBMISSION LOG
+// DASHBOARD — today's date key
+// ═══════════════════════════════════════════════════
+function todayKey() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+}
+
+function dateKey(d) {
+  // d can be a Date object or ISO string from submittedAt
+  const dt = d instanceof Date ? d : new Date(d);
+  return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
+}
+
+function fmtTime(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+}
+
+function renderTile(tileId, badgeId, bodyId, todayRecord) {
+  const tile  = document.getElementById(tileId);
+  const badge = document.getElementById(badgeId);
+  const body  = document.getElementById(bodyId);
+
+  if (!todayRecord) {
+    tile.className  = 'activity-tile status-pending';
+    badge.className = 'tile-status-badge badge-pending';
+    badge.textContent = 'NOT YET';
+    body.innerHTML  = `<div class="tile-pending-msg"><strong>Awaiting Check</strong>No submission recorded for today yet.</div>`;
+    return;
+  }
+
+  const hasAnomaly = todayRecord.anomalies && todayRecord.anomalies.trim().length > 0;
+  const isOk       = todayRecord.overallStatus && todayRecord.overallStatus.includes('ALL CLEAR');
+
+  if (hasAnomaly || !isOk) {
+    tile.className  = 'activity-tile status-anomaly';
+    badge.className = 'tile-status-badge badge-anomaly';
+    badge.textContent = 'ANOMALY';
+  } else {
+    tile.className  = 'activity-tile status-ok';
+    badge.className = 'tile-status-badge badge-ok';
+    badge.textContent = 'ALL CLEAR';
+  }
+
+  const statusColor = (hasAnomaly || !isOk) ? 'warn' : 'ok';
+  const statusText  = todayRecord.overallStatus || (hasAnomaly ? 'Anomaly Reported' : 'Clear');
+
+  body.innerHTML = `
+    <div class="tile-row"><span class="tile-row-label">Checked at</span><span class="tile-row-value">${fmtTime(todayRecord.submittedAt)}</span></div>
+    <div class="tile-row"><span class="tile-row-label">Operator / Supervisor</span><span class="tile-row-value">${todayRecord.operator || '—'}</span></div>
+    <div class="tile-row"><span class="tile-row-label">Status</span><span class="tile-row-value ${statusColor}">${statusText}</span></div>
+    ${todayRecord.missed && todayRecord.missed.trim() ? `<div class="tile-row"><span class="tile-row-label">Missed Items</span><span class="tile-row-value warn" style="font-size:11px">${todayRecord.missed}</span></div>` : ''}
+    ${hasAnomaly ? `<div class="tile-anomaly-box"><strong>⚠ Anomaly Reported</strong>${todayRecord.anomalies}</div>` : ''}`;
+}
+
+// ═══════════════════════════════════════════════════
+// LOAD DASHBOARD
+// ═══════════════════════════════════════════════════
+async function loadDashboard() {
+  try {
+    const res  = await fetch(`${SCRIPT_URL}?action=getDashboard`);
+    const json = await res.json();
+
+    if (!json.success) throw new Error(json.message || 'Failed to load');
+
+    const today  = todayKey();
+    const allFW  = json.fw  || [];
+    const allZL  = json.zl  || [];
+
+    // ── TODAY'S TILES ──────────────────────────────────────────────
+    // Filter strictly to today using submittedAt timestamp
+    const fwToday = allFW.filter(r => r.submittedAt && dateKey(r.submittedAt) === today);
+    const zlToday = allZL.filter(r => r.submittedAt && dateKey(r.submittedAt) === today);
+
+    // Most recent submission today (last in array)
+    const latestFW = fwToday.length ? fwToday[fwToday.length - 1] : null;
+    const latestZL = zlToday.length ? zlToday[zlToday.length - 1] : null;
+
+    renderTile('tile-fw', 'tile-fw-badge', 'tile-fw-body', latestFW);
+    renderTile('tile-zl', 'tile-zl-badge', 'tile-zl-body', latestZL);
+
+    // ── SUMMARY STATS ──────────────────────────────────────────────
+    const fwTotal     = allFW.length;
+    const zlTotal     = allZL.length;
+    const fwAnomalies = allFW.filter(r => r.anomalies && r.anomalies.trim()).length;
+    const zlAnomalies = allZL.filter(r => r.anomalies && r.anomalies.trim()).length;
+    const totalAnomalies = fwAnomalies + zlAnomalies;
+
+    // Unique days checked per activity
+    const fwDays = new Set(allFW.map(r => r.submittedAt ? dateKey(r.submittedAt) : r.date));
+    const zlDays = new Set(allZL.map(r => r.submittedAt ? dateKey(r.submittedAt) : r.date));
+
+    // Days both checked = intersection
+    const daysBoth = [...fwDays].filter(d => zlDays.has(d)).length;
+    // Operational days = union
+    const allDays  = new Set([...fwDays, ...zlDays]);
+    const opDays   = allDays.size;
+    // Missed = days with only one activity checked
+    const missed   = opDays - daysBoth;
+
+    document.getElementById('stat-fw-total').textContent   = fwTotal;
+    document.getElementById('stat-zl-total').textContent   = zlTotal;
+    document.getElementById('stat-anomalies').textContent  = totalAnomalies;
+    document.getElementById('stat-days-both').textContent  = daysBoth;
+    document.getElementById('stat-days-op').textContent    = opDays;
+    document.getElementById('stat-days-missed').textContent = missed;
+
+    // ── 7-DAY BAR ──────────────────────────────────────────────────
+    const weekRow = document.getElementById('week-days-row');
+    const days7   = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      days7.push(d);
+    }
+    const dayNames = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    weekRow.innerHTML = days7.map(d => {
+      const k      = dateKey(d);
+      const hasFW  = fwDays.has(k);
+      const hasZL  = zlDays.has(k);
+      const isToday = k === today;
+      let dotClass, symbol;
+      if (isToday) { dotClass = 'week-day-dot dot-today'; symbol = '⬤'; }
+      else if (hasFW && hasZL) { dotClass = 'week-day-dot dot-both'; symbol = '✓'; }
+      else if (hasFW || hasZL) { dotClass = 'week-day-dot dot-partial'; symbol = '~'; }
+      else { dotClass = 'week-day-dot dot-none'; symbol = '—'; }
+      return `<div class="week-day"><div class="week-day-label">${dayNames[d.getDay()]}</div><div class="${dotClass}">${symbol}</div><div style="font-size:9px;color:#94a3b8;margin-top:2px">${d.getDate()}</div></div>`;
+    }).join('');
+
+    // ── BREAKDOWN TABLE ────────────────────────────────────────────
+    const fwRate = opDays > 0 ? Math.round((fwDays.size / opDays) * 100) : 0;
+    const zlRate = opDays > 0 ? Math.round((zlDays.size / opDays) * 100) : 0;
+
+    const lastFWAnomaly = [...allFW].reverse().find(r => r.anomalies && r.anomalies.trim());
+    const lastZLAnomaly = [...allZL].reverse().find(r => r.anomalies && r.anomalies.trim());
+
+    const fwBarColor = fwRate >= 90 ? '' : fwRate >= 70 ? 'amber' : 'red';
+    const zlBarColor = zlRate >= 90 ? '' : zlRate >= 70 ? 'amber' : 'red';
+
+    document.getElementById('breakdown-body').innerHTML = `
+      <tr>
+        <td><strong>🎡 Ferris Wheel</strong></td>
+        <td style="font-size:13px">${fwTotal} checks / ${fwDays.size} days</td>
+        <td style="min-width:100px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="progress-wrap" style="flex:1"><div class="progress-bar ${fwBarColor}" style="width:${fwRate}%"></div></div>
+            <span style="font-size:12px;font-weight:700;color:#1a2e45;min-width:32px">${fwRate}%</span>
+          </div>
+        </td>
+        <td style="font-size:12px;color:#64748b">${lastFWAnomaly ? (lastFWAnomaly.date || '—') + ': ' + lastFWAnomaly.anomalies.substring(0,40) + '…' : 'None recorded'}</td>
+      </tr>
+      <tr>
+        <td><strong>🪂 Kids Zipline</strong></td>
+        <td style="font-size:13px">${zlTotal} checks / ${zlDays.size} days</td>
+        <td style="min-width:100px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="progress-wrap" style="flex:1"><div class="progress-bar ${zlBarColor}" style="width:${zlRate}%"></div></div>
+            <span style="font-size:12px;font-weight:700;color:#1a2e45;min-width:32px">${zlRate}%</span>
+          </div>
+        </td>
+        <td style="font-size:12px;color:#64748b">${lastZLAnomaly ? (lastZLAnomaly.date || '—') + ': ' + lastZLAnomaly.anomalies.substring(0,40) + '…' : 'None recorded'}</td>
+      </tr>`;
+
+    // ── RECENT SUBMISSIONS ─────────────────────────────────────────
+    const combined = [
+      ...allFW.map(r => ({...r, actType:'FERRIS_WHEEL'})),
+      ...allZL.map(r => ({...r, actType:'KIDS_ZIPLINE'})),
+    ].sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)).slice(0, 10);
+
+    if (!combined.length) {
+      document.getElementById('dash-recent-body').innerHTML = '<div class="empty-state">No submissions yet.</div>';
+    } else {
+      const tableRows = combined.map(r => {
+        const hasAnomaly = r.anomalies && r.anomalies.trim().length > 0;
+        const pill = hasAnomaly ? '<span class="pill pill-action">⚠ Anomaly</span>' : '<span class="pill pill-ok">✓ Clear</span>';
+        const icon = r.actType === 'FERRIS_WHEEL' ? '🎡 Ferris Wheel' : '🪂 Kids Zipline';
+        const signer = r.actType === 'FERRIS_WHEEL' ? (r.sigSTM || r.sigOperator || '—') : (r.sigTM || r.sigSupervisor || '—');
+        const isTodayRow = r.submittedAt && dateKey(r.submittedAt) === today;
+        return `<tr style="${isTodayRow ? 'background:#f0fdf4;' : ''}">
+          <td style="font-size:11px;color:#64748b;font-family:monospace">${r.date||'—'}</td>
+          <td style="font-size:13px">${icon}</td>
+          <td>${pill}</td>
+          <td style="font-size:12px;color:#64748b">${signer}</td>
+          <td style="font-size:11px;color:#94a3b8">${r.submittedAt ? fmtTime(r.submittedAt) : '—'}</td>
+        </tr>`;
+      }).join('');
+      document.getElementById('dash-recent-body').innerHTML = `
+        <table class="log-table"><thead><tr><th>Date</th><th>Activity</th><th>Status</th><th>Signed By</th><th>Time</th></tr></thead>
+        <tbody>${tableRows}</tbody></table>`;
+    }
+
+    // Update refresh time
+    document.getElementById('dash-refreshed').textContent = new Date().toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'});
+
+  } catch (err) {
+    document.getElementById('tile-fw-body').innerHTML = `<div class="tile-pending-msg"><strong>⚠ Error</strong>${err.message}</div>`;
+    document.getElementById('tile-zl-body').innerHTML = `<div class="tile-pending-msg"><strong>⚠ Error</strong>${err.message}</div>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// MIDNIGHT RESET — schedules a page reload at midnight
+// so the tiles clear and await fresh submissions
+// ═══════════════════════════════════════════════════
+function scheduleMidnightReset() {
+  const now        = new Date();
+  const midnight   = new Date(now);
+  midnight.setHours(24, 0, 0, 0);
+  const msUntil    = midnight - now;
+  setTimeout(() => {
+    loadDashboard();          // tiles reset naturally since today = new date
+    scheduleMidnightReset();  // re-schedule for next midnight
+  }, msUntil);
+}
+
+// ═══════════════════════════════════════════════════
+// ALL RECORDS LOG
 // ═══════════════════════════════════════════════════
 async function loadLog() {
   const logBody = document.getElementById('log-body');
@@ -579,10 +1112,8 @@ async function loadLog() {
     const res  = await fetch(`${SCRIPT_URL}?action=getLog`);
     const json = await res.json();
     const rows = json.data || [];
-    document.getElementById('stat-fw').textContent = rows.filter(r => r.type === 'FERRIS_WHEEL').length;
-    document.getElementById('stat-zl').textContent = rows.filter(r => r.type === 'KIDS_ZIPLINE').length;
     if (!rows.length) { logBody.innerHTML = '<div class="empty-state">No submissions yet.</div>'; return; }
-    const tableRows = rows.slice().reverse().slice(0, 40).map(r => {
+    const tableRows = rows.slice().reverse().slice(0, 60).map(r => {
       const hasAnomaly = r.anomalies && r.anomalies.trim().length > 0;
       const pill = hasAnomaly ? '<span class="pill pill-action">⚠ Anomaly</span>' : '<span class="pill pill-ok">✓ Clear</span>';
       const icon = r.type === 'FERRIS_WHEEL' ? '🎡' : '🪂';
@@ -593,8 +1124,258 @@ async function loadLog() {
     }).join('');
     logBody.innerHTML = `<table class="log-table"><thead><tr><th>Check Date</th><th>Activity</th><th>Status</th><th>Signed By</th><th>Submitted</th></tr></thead><tbody>${tableRows}</tbody></table>`;
   } catch (err) {
-    logBody.innerHTML = `<div class="empty-state">⚠ Could not load log.<br><small>${err.message}</small></div>`;
+    logBody.innerHTML = `<div class="empty-state">⚠ Could not load records.<br><small>${err.message}</small></div>`;
   }
+}
+
+
+// ═══════════════════════════════════════════════════
+// MAINTENANCE SCHEDULE DATA
+// ═══════════════════════════════════════════════════
+
+const MAINT_TASKS = {
+  fw: {
+    daily: [
+      { id:'fw-d1', freq:'daily', title:'Motor #1 — Visual inspection', desc:'Check for unusual noise, vibration, heat or leaks. Confirm smooth start.' },
+      { id:'fw-d2', freq:'daily', title:'Motor #2 — Visual inspection', desc:'Check for unusual noise, vibration, heat or leaks. Confirm smooth start.' },
+      { id:'fw-d3', freq:'daily', title:'Pneumatic Brake System #1 — Function test', desc:'Test engagement and release. Confirm brake holds wheel under load.' },
+      { id:'fw-d4', freq:'daily', title:'Pneumatic Brake System #2 — Function test', desc:'Test engagement and release. Confirm brake holds wheel under load.' },
+      { id:'fw-d5', freq:'daily', title:'Air compressor — Pressure check', desc:'Check operating pressure within manufacturer spec. Drain condensate.' },
+      { id:'fw-d6', freq:'daily', title:'Control panel — All indicators normal', desc:'Check for fault lights, warning indicators, or abnormal readings.' },
+      { id:'fw-d7', freq:'daily', title:'All chairs — Visual condition check', desc:'Inspect seat, lap bar, hinges and safety restraint on all chairs.' },
+      { id:'fw-d8', freq:'daily', title:'Boarding/disembarking platform — Clear and safe', desc:'No debris, non-slip surfaces intact, handrails secure.' },
+      { id:'fw-d9', freq:'daily', title:'Test run — Minimum 2 full rotations unloaded', desc:'Observe smooth rotation, no grinding or abnormal sounds.' },
+    ],
+    weekly: [
+      { id:'fw-w1', freq:'weekly', title:'Lubrication — Main drive chain', desc:'Apply manufacturer-specified grease to drive chain. Check tension.' },
+      { id:'fw-w2', freq:'weekly', title:'Lubrication — Spoke pivot points', desc:'Grease all spoke pivot bearings. Check for signs of wear.' },
+      { id:'fw-w3', freq:'weekly', title:'Lubrication — Chair pivot pins', desc:'Grease all chair pivot pins. Confirm free swing.' },
+      { id:'fw-w4', freq:'weekly', title:'Electrical connections — Visual check', desc:'Inspect all visible wiring, junction boxes and connectors for damage or loose connections.' },
+      { id:'fw-w5', freq:'weekly', title:'Pneumatic hoses and fittings — Leak check', desc:'Inspect all air lines and fittings. Listen for leaks at pressure.' },
+      { id:'fw-w6', freq:'weekly', title:'All bolts and fasteners — Torque check sample', desc:'Check a rotating sample of structural bolts. Record any loose findings.' },
+      { id:'fw-w7', freq:'weekly', title:'Emergency stop — Full function test', desc:'Test both emergency stop buttons from control panel and remote positions.' },
+      { id:'fw-w8', freq:'weekly', title:'Slow-down function — Test', desc:'Confirm gradual deceleration sequence operates correctly.' },
+    ],
+    monthly: [
+      { id:'fw-m1', freq:'monthly', title:'Full lubrication service — All points', desc:'Complete all-point lubrication per manufacturer schedule. Record lubricant type and quantity used.' },
+      { id:'fw-m2', freq:'monthly', title:'Drive chain — Tension, wear and elongation check', desc:'Measure chain elongation. Replace if beyond manufacturer wear limit.' },
+      { id:'fw-m3', freq:'monthly', title:'Motor #1 — Electrical checks', desc:'Check amperage draw, voltage balance, insulation resistance. Compare against baseline.' },
+      { id:'fw-m4', freq:'monthly', title:'Motor #2 — Electrical checks', desc:'Check amperage draw, voltage balance, insulation resistance. Compare against baseline.' },
+      { id:'fw-m5', freq:'monthly', title:'Air compressor — Full service check', desc:'Replace air filter, check pressure relief valve, oil level (if applicable), belt tension.' },
+      { id:'fw-m6', freq:'monthly', title:'All chair lap bars and safety restraints — Load test', desc:'Test each restraint locking mechanism under simulated passenger weight.' },
+      { id:'fw-m7', freq:'monthly', title:'Structural welds and frame — Visual inspection', desc:'Inspect all visible welds, hub plate, spokes and outer ring for cracks or corrosion.' },
+      { id:'fw-m8', freq:'monthly', title:'Brake pads — Wear measurement', desc:'Measure brake pad thickness on both systems. Record and compare against minimum spec.' },
+      { id:'fw-m9', freq:'monthly', title:'Control panel — Full functional test', desc:'Test all switches, indicators, speed control, emergency functions and interlocks.' },
+    ],
+    annual: [
+      { id:'fw-a1', freq:'annual', title:'Full structural inspection — Frame, hub, spokes, ring', desc:'Complete visual and NDT (non-destructive test) inspection by qualified engineer. Document all findings.' },
+      { id:'fw-a2', freq:'annual', title:'Motor #1 — Full overhaul', desc:'Disassemble, inspect bearings, windings, seals. Replace wear parts. Rebalance if required.' },
+      { id:'fw-a3', freq:'annual', title:'Motor #2 — Full overhaul', desc:'Disassemble, inspect bearings, windings, seals. Replace wear parts. Rebalance if required.' },
+      { id:'fw-a4', freq:'annual', title:'Gearbox — Oil change and internal inspection', desc:'Drain and replace gearbox oil. Inspect gears for wear. Check for metal particles in oil.' },
+      { id:'fw-a5', freq:'annual', title:'Pneumatic Brake System #1 — Full strip and rebuild', desc:'Replace all seals, O-rings and wear parts. Pressure test to 150% operating pressure.' },
+      { id:'fw-a6', freq:'annual', title:'Pneumatic Brake System #2 — Full strip and rebuild', desc:'Replace all seals, O-rings and wear parts. Pressure test to 150% operating pressure.' },
+      { id:'fw-a7', freq:'annual', title:'All chairs — Full inspection and refurbishment', desc:'Strip, inspect and repaint all chairs. Replace any damaged restraints or safety components.' },
+      { id:'fw-a8', freq:'annual', title:'Electrical system — Full insulation test and wiring audit', desc:'Test insulation resistance on all circuits. Inspect all conduit, junction boxes and connections.' },
+      { id:'fw-a9', freq:'annual', title:'Air compressor — Annual service', desc:'Replace all filters, check valves, pressure vessels. Carry out pressure vessel certification if applicable.' },
+    ],
+  },
+  zl: {
+    daily: [
+      { id:'zl-d1', freq:'daily', title:'Main zipline wire — Visual inspection (full length)', desc:'Walk the line. Check for kinks, broken strands, corrosion, or unusual sag.' },
+      { id:'zl-d2', freq:'daily', title:'Wire terminations — Landing end', desc:'Inspect anchor bolts, thimbles, swage fittings and backup wire.' },
+      { id:'zl-d3', freq:'daily', title:'Wire terminations — Start end', desc:'Inspect anchor bolts, thimbles, swage fittings and backup wire.' },
+      { id:'zl-d4', freq:'daily', title:'Zip Stop device — Function test per manual', desc:'Test trigger, rope engagement and reset. No white inlay visible on Dyneema rope.' },
+      { id:'zl-d5', freq:'daily', title:'EAD (Emergency Arrest Device) — Position and corridor check', desc:'Confirm EAD in position, padding intact, corridor clear of obstacles.' },
+      { id:'zl-d6', freq:'daily', title:'All harnesses — Visual condition check', desc:'Inspect stitching, webbing, buckles and adjustment on every harness. Remove any defective item.' },
+      { id:'zl-d7', freq:'daily', title:'All helmets — Visual condition check', desc:'Check shell integrity, liner and chinstrap on every helmet. Remove any cracked or damaged item.' },
+      { id:'zl-d8', freq:'daily', title:'All carabiners — Visual and function check', desc:'Inspect gate action, locking mechanism and body on every carabiner.' },
+      { id:'zl-d9', freq:'daily', title:'All pulleys — Visual condition check', desc:'Inspect pulley wheel, side plates, axle and rope groove wear.' },
+      { id:'zl-d10', freq:'daily', title:'Test run — Both lines', desc:'Complete test run on each line before guests. Confirm smooth travel and Zip Stop function.' },
+    ],
+    weekly: [
+      { id:'zl-w1', freq:'weekly', title:'Wire rope — Lubrication', desc:'Apply wire rope lubricant to full length of both lines. Use manufacturer-specified product.' },
+      { id:'zl-w2', freq:'weekly', title:'Zip Stop — Dyneema rope inspection and measurement', desc:'Check rope for wear, elongation or white core exposure. Measure length against baseline.' },
+      { id:'zl-w3', freq:'weekly', title:'Pulleys — Bearing check and lubrication', desc:'Spin each pulley by hand. Check for rough running, lateral play or noise. Lubricate bearings.' },
+      { id:'zl-w4', freq:'weekly', title:'EAD — Full mechanism inspection', desc:'Inspect shock absorber, attachment points, padding and mounting hardware.' },
+      { id:'zl-w5', freq:'weekly', title:'Anchor structures — Visual inspection', desc:'Inspect all anchor bolts, base plates and foundation attachments at start and landing.' },
+      { id:'zl-w6', freq:'weekly', title:'Lanyards — Full inspection', desc:'Check all lanyards for cuts, abrasion, stitching failure or shock-load indicators.' },
+      { id:'zl-w7', freq:'weekly', title:'Rescue equipment — Complete inventory check', desc:'Verify all rescue kit items are present, undamaged and correctly stored.' },
+      { id:'zl-w8', freq:'weekly', title:'Wire sag — Measurement and recording', desc:'Measure sag at midpoint of each line. Record and compare against baseline. Adjust tension if needed.' },
+    ],
+    monthly: [
+      { id:'zl-m1', freq:'monthly', title:'Wire rope — Detailed strand-by-strand inspection', desc:'Inspect entire length for broken wires, corrosion pits, bird-caging or deformation.' },
+      { id:'zl-m2', freq:'monthly', title:'All harnesses — Load test and retirement check', desc:'Check manufacture date. Retire any harness over manufacturer life limit or post-incident.' },
+      { id:'zl-m3', freq:'monthly', title:'All helmets — Impact history and retirement check', desc:'Check manufacture date and impact history. Retire any helmet that has taken a fall impact.' },
+      { id:'zl-m4', freq:'monthly', title:'All carabiners — Load test and retirement check', desc:'Check manufacture date. Retirement any carabiner showing wear, deformation or gate issues.' },
+      { id:'zl-m5', freq:'monthly', title:'Zip Stop — Full strip and inspection', desc:'Disassemble Zip Stop per manual. Inspect all internal components, springs and rope interface.' },
+      { id:'zl-m6', freq:'monthly', title:'Wire rope terminations — Detailed inspection', desc:'Inspect swage fittings, thimbles, pins and locking hardware at all four termination points.' },
+      { id:'zl-m7', freq:'monthly', title:'Anchor structures — Torque check on all bolts', desc:'Check torque on all anchor bolts at start platform and landing structure.' },
+      { id:'zl-m8', freq:'monthly', title:'Rescue scenario practice', desc:'Carry out a full timed rescue drill from mid-line. Record time and any issues.' },
+    ],
+    annual: [
+      { id:'zl-a1', freq:'annual', title:'Wire rope — Full replacement assessment', desc:'Calculate cycles and age. Replace if beyond manufacturer life limit or if strand count failures found.' },
+      { id:'zl-a2', freq:'annual', title:'All anchor structures — Structural engineering inspection', desc:'Qualified structural engineer to inspect all foundations, steel work and fixings.' },
+      { id:'zl-a3', freq:'annual', title:'Zip Stop device — Manufacturer recertification', desc:'Return to manufacturer or authorised service agent for annual recertification and service.' },
+      { id:'zl-a4', freq:'annual', title:'EAD — Full replacement or recertification', desc:'Replace or recertify EAD per manufacturer schedule. Update documentation.' },
+      { id:'zl-a5', freq:'annual', title:'All pulleys — Bearing replacement and refurbishment', desc:'Replace all pulley bearings. Inspect and replace any worn side plates or axles.' },
+      { id:'zl-a6', freq:'annual', title:'Start platform — Full structural inspection', desc:'Inspect all steelwork, timber decking, handrails, stairs and non-slip surfaces.' },
+      { id:'zl-a7', freq:'annual', title:'Landing structure — Full structural inspection', desc:'Inspect all steelwork, ground anchors, buffer stops and approach surfaces.' },
+      { id:'zl-a8', freq:'annual', title:'Full harness, helmet and hardware retirement review', desc:'Review all PPE against manufacture dates and life limits. Retire and replace as required. Update register.' },
+    ],
+  },
+};
+
+// ═══════════════════════════════════════════════════
+// PIN / LOCK
+// ═══════════════════════════════════════════════════
+const MAINT_PIN = '1234';
+let maintUnlocked = false;
+
+function checkPin() {
+  const val = document.getElementById('maint-pin').value;
+  if (val === MAINT_PIN) {
+    maintUnlocked = true;
+    document.getElementById('maint-lock-screen').style.display = 'none';
+    document.getElementById('maint-panel').classList.add('unlocked');
+    document.getElementById('pin-error').style.display = 'none';
+    buildAllMaintTasks();
+    loadMaintDates();
+  } else {
+    document.getElementById('pin-error').style.display = 'block';
+    document.getElementById('maint-pin').value = '';
+    document.getElementById('maint-pin').focus();
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.activeElement && document.activeElement.id === 'maint-pin') checkPin();
+});
+
+function lockMaint() {
+  maintUnlocked = false;
+  document.getElementById('maint-lock-screen').style.display = '';
+  document.getElementById('maint-panel').classList.remove('unlocked');
+  document.getElementById('maint-pin').value = '';
+}
+
+// ═══════════════════════════════════════════════════
+// MAINTENANCE ACTIVITY SUB-TABS
+// ═══════════════════════════════════════════════════
+function switchMaintAct(act) {
+  document.querySelectorAll('.maint-act-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', ['fw','zl'][i] === act);
+  });
+  document.getElementById('maint-fw').style.display = act === 'fw' ? '' : 'none';
+  document.getElementById('maint-zl').style.display = act === 'zl' ? '' : 'none';
+}
+
+// ═══════════════════════════════════════════════════
+// BUILD TASK ROWS
+// ═══════════════════════════════════════════════════
+function buildAllMaintTasks() {
+  ['fw','zl'].forEach(act => {
+    ['daily','weekly','monthly','annual'].forEach(freq => {
+      const tasks = MAINT_TASKS[act][freq];
+      const container = document.getElementById(`maint-${act}-${freq}`);
+      if (!container) return;
+      container.innerHTML = tasks.map(t => `
+        <div class="maint-task-row" id="row-${t.id}">
+          <div class="maint-status-dot dot-grey" id="dot-${t.id}"></div>
+          <span class="maint-freq-badge freq-${freq}">${freq}</span>
+          <div class="maint-task-info">
+            <div class="maint-task-title">${t.title}</div>
+            <div class="maint-task-desc">${t.desc}</div>
+            <div style="margin-top:5px" id="tag-${t.id}"></div>
+          </div>
+          <div class="maint-task-controls">
+            <span class="maint-date-label">Last Done</span>
+            <input type="date" class="maint-date-input" id="last-${t.id}" onchange="updateDot('${t.id}','${freq}')">
+            <span class="maint-date-label" style="margin-top:4px">Next Due</span>
+            <input type="date" class="maint-date-input" id="next-${t.id}" onchange="updateDot('${t.id}','${freq}')">
+          </div>
+        </div>`).join('');
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// DOT STATUS LOGIC
+// ═══════════════════════════════════════════════════
+function updateDot(taskId, freq) {
+  const nextEl = document.getElementById('next-' + taskId);
+  const dot    = document.getElementById('dot-' + taskId);
+  const tag    = document.getElementById('tag-' + taskId);
+  if (!nextEl || !dot) return;
+
+  const nextVal = nextEl.value;
+  if (!nextVal) { dot.className = 'maint-status-dot dot-grey'; tag.innerHTML = ''; return; }
+
+  const today     = new Date(); today.setHours(0,0,0,0);
+  const nextDate  = new Date(nextVal);
+  const diffDays  = Math.round((nextDate - today) / 86400000);
+
+  // Warning window per frequency
+  const warnDays = { daily:1, weekly:3, monthly:7, annual:30 }[freq] || 7;
+
+  if (diffDays < 0) {
+    dot.className   = 'maint-status-dot dot-red';
+    tag.innerHTML   = `<span class="maint-overdue-tag">⚠ Overdue by ${Math.abs(diffDays)} day${Math.abs(diffDays)===1?'':'s'}</span>`;
+  } else if (diffDays <= warnDays) {
+    dot.className   = 'maint-status-dot dot-amber';
+    tag.innerHTML   = `<span class="maint-due-tag">Due in ${diffDays} day${diffDays===1?'':'s'}</span>`;
+  } else {
+    dot.className   = 'maint-status-dot dot-green';
+    tag.innerHTML   = `<span style="font-size:11px;color:#2a9d5c">✓ Scheduled — ${diffDays} days</span>`;
+  }
+}
+
+function refreshAllDots() {
+  ['fw','zl'].forEach(act => {
+    ['daily','weekly','monthly','annual'].forEach(freq => {
+      MAINT_TASKS[act][freq].forEach(t => updateDot(t.id, freq));
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// PERSIST DATES — localStorage
+// ═══════════════════════════════════════════════════
+const MAINT_STORAGE_KEY = 'gv_maint_dates_v1';
+
+function saveMaint(act, freq) {
+  const tasks  = MAINT_TASKS[act][freq];
+  const stored = JSON.parse(localStorage.getItem(MAINT_STORAGE_KEY) || '{}');
+  tasks.forEach(t => {
+    const last = document.getElementById('last-' + t.id);
+    const next = document.getElementById('next-' + t.id);
+    stored[t.id] = { last: last ? last.value : '', next: next ? next.value : '' };
+  });
+  localStorage.setItem(MAINT_STORAGE_KEY, JSON.stringify(stored));
+
+  const statusEl = document.getElementById(`${act}-save-${freq}-status`);
+  if (statusEl) {
+    statusEl.textContent = '✓ Saved successfully';
+    statusEl.className   = 'maint-save-status saved';
+    setTimeout(() => { statusEl.textContent = ''; statusEl.className = 'maint-save-status'; }, 3000);
+  }
+  refreshAllDots();
+}
+
+function loadMaintDates() {
+  const stored = JSON.parse(localStorage.getItem(MAINT_STORAGE_KEY) || '{}');
+  ['fw','zl'].forEach(act => {
+    ['daily','weekly','monthly','annual'].forEach(freq => {
+      MAINT_TASKS[act][freq].forEach(t => {
+        const entry = stored[t.id];
+        if (!entry) return;
+        const lastEl = document.getElementById('last-' + t.id);
+        const nextEl = document.getElementById('next-' + t.id);
+        if (lastEl) lastEl.value = entry.last || '';
+        if (nextEl) nextEl.value = entry.next || '';
+      });
+    });
+  });
+  refreshAllDots();
 }
 
 // ═══════════════════════════════════════════════════
@@ -602,11 +1383,12 @@ async function loadLog() {
 // ═══════════════════════════════════════════════════
 function switchTab(id) {
   document.querySelectorAll('.tab-btn').forEach((btn, i) => {
-    btn.classList.toggle('active', ['fw','zl','log'][i] === id);
+    btn.classList.toggle('active', ['dash','fw','zl','log','maint'][i] === id);
   });
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.getElementById('tab-' + id).classList.add('active');
   if (id === 'log') loadLog();
+  if (id === 'maint' && !maintUnlocked) { document.getElementById('maint-pin').focus(); }
 }
 
 // ═══════════════════════════════════════════════════
@@ -614,8 +1396,9 @@ function switchTab(id) {
 // ═══════════════════════════════════════════════════
 function tick() {
   const now = new Date();
-  document.getElementById('hdr-date').textContent = now.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-  document.getElementById('hdr-time').textContent = now.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  document.getElementById('hdr-date').textContent = now.toLocaleDateString('en-GB', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('hdr-time').textContent = now.toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  document.getElementById('dash-today-label').textContent = now.toLocaleDateString('en-GB', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
 }
 
 // ═══════════════════════════════════════════════════
@@ -624,6 +1407,7 @@ function tick() {
 (function init() {
   const today = new Date().toISOString().split('T')[0];
   ['fw-date','zl-date'].forEach(id => { const el = document.getElementById(id); if (el) el.value = today; });
+
   buildCheckRows('fw-checks-body', FW_CHECKS);
   buildOI('fw-oi-body', 'fw', 3);
   buildSignoffs('fw-signoffs', FW_SIGNOFFS);
@@ -631,8 +1415,12 @@ function tick() {
   buildCheckRows('zl-checks-body', ZL_CHECKS);
   buildOI('zl-oi-body', 'zl', 3);
   buildSignoffs('zl-signoffs', ZL_SIGNOFFS);
+
   tick();
   setInterval(tick, 1000);
+
+  loadDashboard();
+  scheduleMidnightReset();
 })();
 </script>
 </body>
