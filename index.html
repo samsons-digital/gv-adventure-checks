@@ -1762,6 +1762,184 @@ function switchTab(id) {
 }
 
 // ═══════════════════════════════════════════════════
+// EDIT RECORD SYSTEM
+// ═══════════════════════════════════════════════════
+
+const EDIT_PIN = '1234';
+let editUnlocked   = false;
+let editRecords    = [];
+let selectedRecord = null;
+
+function checkEditPin() {
+  const val = document.getElementById('edit-pin').value;
+  if (val === EDIT_PIN) {
+    editUnlocked = true;
+    document.getElementById('edit-lock-screen').style.display = 'none';
+    document.getElementById('edit-panel').classList.add('unlocked');
+    document.getElementById('edit-pin-error').style.display = 'none';
+    loadEditRecords();
+    loadAuditLog();
+  } else {
+    document.getElementById('edit-pin-error').style.display = 'block';
+    document.getElementById('edit-pin').value = '';
+    document.getElementById('edit-pin').focus();
+  }
+}
+
+function lockEdit() {
+  editUnlocked   = false;
+  selectedRecord = null;
+  document.getElementById('edit-lock-screen').style.display = '';
+  document.getElementById('edit-panel').classList.remove('unlocked');
+  document.getElementById('edit-pin').value = '';
+  document.getElementById('edit-form-wrap').classList.remove('show');
+}
+
+async function loadEditRecords() {
+  const listEl = document.getElementById('edit-record-list');
+  listEl.innerHTML = '<div class="empty-state">Loading\u2026</div>';
+  try {
+    const res  = await fetch(SCRIPT_URL + '?action=getLog');
+    const json = await res.json();
+    editRecords = (json.data || []).slice(0, 10);
+    if (!editRecords.length) {
+      listEl.innerHTML = '<div class="empty-state">No submissions found.</div>';
+      return;
+    }
+    listEl.innerHTML = editRecords.map((r, idx) => {
+      const icon  = r.type === 'FERRIS_WHEEL' ? '\uD83C\uDFA1' : '\uD83E\uDE82';
+      const name  = r.type === 'FERRIS_WHEEL' ? 'Ferris Wheel' : 'Kids Zipline';
+      const time  = r.submittedAt ? new Date(r.submittedAt).toLocaleString('en-GB') : '\u2014';
+      const hasA  = r.anomalies && r.anomalies.trim();
+      const badge = hasA
+        ? '<span class="edit-rec-badge" style="background:#fef3c7;color:#92400e">Anomaly</span>'
+        : '<span class="edit-rec-badge" style="background:#dcfce7;color:#166534">Clear</span>';
+      return `<div class="edit-record-row" id="edit-row-${idx}" onclick="selectRecord(${idx})">
+        <span class="edit-rec-icon">${icon}</span>
+        <div class="edit-rec-info">
+          <div class="edit-rec-title">${name} \u2014 ${r.date || '\u2014'}</div>
+          <div class="edit-rec-sub">Submitted: ${time} &nbsp;|&nbsp; Operator: ${r.operator || '\u2014'}</div>
+        </div>
+        ${badge}
+      </div>`;
+    }).join('');
+  } catch (err) {
+    listEl.innerHTML = `<div class="empty-state">\u26A0 Could not load records. ${err.message}</div>`;
+  }
+}
+
+function selectRecord(idx) {
+  document.querySelectorAll('.edit-record-row').forEach(r => r.classList.remove('selected'));
+  const rowEl = document.getElementById('edit-row-' + idx);
+  if (rowEl) rowEl.classList.add('selected');
+  selectedRecord = editRecords[idx];
+  const r = selectedRecord;
+  const name = r.type === 'FERRIS_WHEEL' ? '\uD83C\uDFA1 Ferris Wheel' : '\uD83E\uDE82 Kids Zipline';
+  document.getElementById('edit-form-title').textContent = name + ' \u2014 ' + (r.date || '\u2014');
+  document.getElementById('edit-date').value     = r.date     || '';
+  document.getElementById('edit-operator').value = r.operator || '';
+  document.getElementById('edit-op-start').value = r.opStart  || '';
+  document.getElementById('edit-op-end').value   = r.opEnd    || '';
+  document.getElementById('edit-comments').value = r.anomalies || '';
+  const codes = r.type === 'FERRIS_WHEEL'
+    ? ['FW5','FW6','FW7','FW8','FW9','FW10','FW11','FW12','FW13','FW14','FW15','FW16','FW17','FW18']
+    : ['ZL11','ZL12','ZL13','ZL14','ZL15','ZL16','ZL17','ZL18','ZL19','ZL20','ZL21','ZL22','ZL23'];
+  const cd = r.checks || {};
+  document.getElementById('edit-checks-grid').innerHTML = codes.map(code => `
+    <div class="edit-check-item">
+      <span class="edit-check-code">${code}</span>
+      <select class="edit-check-sel" id="echk-${code}">
+        <option value="YES" ${(cd[code]||'NO')==='YES'?'selected':''}>YES</option>
+        <option value="NO"  ${(cd[code]||'NO')==='NO' ?'selected':''}>NO</option>
+      </select>
+    </div>`).join('');
+  document.getElementById('edit-editor-name').value = '';
+  document.getElementById('edit-reason').value      = '';
+  document.getElementById('edit-status').className  = 'status-msg';
+  document.getElementById('edit-form-wrap').classList.add('show');
+  document.getElementById('edit-form-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function cancelEdit() {
+  document.getElementById('edit-form-wrap').classList.remove('show');
+  document.querySelectorAll('.edit-record-row').forEach(r => r.classList.remove('selected'));
+  selectedRecord = null;
+}
+
+async function saveEdit() {
+  if (!selectedRecord) return;
+  const editorName = document.getElementById('edit-editor-name').value.trim();
+  const reason     = document.getElementById('edit-reason').value.trim();
+  if (!editorName) { alert('Please enter your name before saving.'); document.getElementById('edit-editor-name').focus(); return; }
+  if (!reason)     { alert('A reason for the edit is required.');     document.getElementById('edit-reason').focus();      return; }
+  const btn      = document.getElementById('edit-save-btn');
+  const statusEl = document.getElementById('edit-status');
+  btn.disabled   = true;
+  statusEl.className = 'status-msg';
+  const r = selectedRecord;
+  const checkCodes = r.type === 'FERRIS_WHEEL'
+    ? ['FW5','FW6','FW7','FW8','FW9','FW10','FW11','FW12','FW13','FW14','FW15','FW16','FW17','FW18']
+    : ['ZL11','ZL12','ZL13','ZL14','ZL15','ZL16','ZL17','ZL18','ZL19','ZL20','ZL21','ZL22','ZL23'];
+  const newChecks = {};
+  checkCodes.forEach(code => {
+    const el = document.getElementById('echk-' + code);
+    newChecks[code] = el ? el.value : (r.checks||{})[code] || 'NO';
+  });
+  const payload = {
+    action      : 'editRecord',
+    type        : r.type,
+    submittedAt : r.submittedAt,
+    date        : r.date,
+    editorName,
+    reason,
+    newDate     : document.getElementById('edit-date').value,
+    newOperator : document.getElementById('edit-operator').value,
+    newOpStart  : document.getElementById('edit-op-start').value,
+    newOpEnd    : document.getElementById('edit-op-end').value,
+    newComments : document.getElementById('edit-comments').value,
+    newChecks,
+    originalValues: { date: r.date, operator: r.operator, anomalies: r.anomalies, checks: r.checks || {} },
+  };
+  try {
+    const res  = await fetch(SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body: JSON.stringify(payload) });
+    const json = await res.json();
+    if (json.status === 'success' || json.success) {
+      statusEl.className = 'status-msg success show';
+      statusEl.innerHTML = '\u2705 Record updated and logged to audit trail.';
+      setTimeout(() => { loadEditRecords(); loadAuditLog(); cancelEdit(); }, 1800);
+    } else {
+      throw new Error(json.message || json.error || 'Unknown error');
+    }
+  } catch (err) {
+    statusEl.className = 'status-msg error show';
+    statusEl.innerHTML = '\u274C Save failed: ' + err.message;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function loadAuditLog() {
+  const auditEl = document.getElementById('edit-audit-body');
+  try {
+    const res  = await fetch(SCRIPT_URL + '?action=getAuditLog');
+    const json = await res.json();
+    const rows = json.data || [];
+    if (!rows.length) { auditEl.innerHTML = '<div class="empty-state">No edits recorded yet.</div>'; return; }
+    auditEl.innerHTML = `<div style="overflow-x:auto"><table class="audit-table">
+      <thead><tr><th>Edited At</th><th>Editor</th><th>Activity</th><th>Record Date</th><th>Reason</th><th>Changes</th></tr></thead>
+      <tbody>${rows.map(a => `<tr>
+        <td style="white-space:nowrap;font-family:monospace;font-size:11px">${a.editedAt||'\u2014'}</td>
+        <td>${a.editorName||'\u2014'}</td><td>${a.activity||'\u2014'}</td><td>${a.recordDate||'\u2014'}</td>
+        <td style="color:#92400e;font-weight:600">${a.reason||'\u2014'}</td>
+        <td style="font-size:11px;color:#64748b">${a.changesSummary||'\u2014'}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>`;
+  } catch (err) {
+    auditEl.innerHTML = '<div class="empty-state">Audit log will appear here after first edit.</div>';
+  }
+}
+
+// ═══════════════════════════════════════════════════
 // CLOCK
 // ═══════════════════════════════════════════════════
 function tick() {
