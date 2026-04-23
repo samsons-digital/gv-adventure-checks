@@ -1137,7 +1137,7 @@ const FW_CHECKS = [
   { code:'FW9',  label:'Stop and slow-down buttons — Testing' },
   { code:'FW10', label:'Smooth passage of chairs — Visual check' },
   { code:'FW11', label:'Check of all chairs — condition and security' },
-  { code:'FW12', label:'Any maintenance done — record in comments if yes' },
+  { code:'FW12', label:'Maintenance carried out today?', info:true, hint:'NO is normal. YES = describe in Comments.' },
   { code:'FW13', label:'Air compressor — Checking and testing' },
   { code:'FW14', label:'Main control panel — Checking and starting' },
   { code:'FW15', label:'Two-way radios — Check and battery charge' },
@@ -1190,17 +1190,25 @@ const ZL_SIGNOFFS = [
 // BUILDERS
 // ═══════════════════════════════════════════════════
 function buildCheckRows(id, items) {
-  document.getElementById(id).innerHTML = items.map(item => `
-    <div class="check-row">
+  document.getElementById(id).innerHTML = items.map(item => {
+    const infoTag = item.info
+      ? `<span style="font-size:10px;font-weight:700;background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe;border-radius:4px;padding:2px 6px;margin-left:6px;vertical-align:middle">INFO</span>`
+      : '';
+    const hint = item.hint
+      ? `<div style="font-size:11px;color:#3b82f6;margin-top:3px;font-style:italic">${item.hint}</div>`
+      : '';
+    return `
+    <div class="check-row" style="${item.info ? 'background:#f0f9ff;border-left:3px solid #3b82f6;' : ''}">
       <span class="check-code">${item.code}</span>
-      <span class="check-label">${item.label}</span>
+      <span class="check-label">${item.label}${infoTag}${hint}</span>
       <div class="yn-wrap">
         <input type="radio" name="chk-${item.code}" id="chk-${item.code}-yes" value="YES">
         <label for="chk-${item.code}-yes">YES</label>
         <input type="radio" name="chk-${item.code}" id="chk-${item.code}-no" value="NO" checked>
         <label for="chk-${item.code}-no">NO</label>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function buildEqpRows(id, items) {
